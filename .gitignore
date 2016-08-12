@@ -31,3 +31,4 @@ bower_components/
 /server/public/*.html
 /server/public/assets/
 .idea/
+*.bundle
