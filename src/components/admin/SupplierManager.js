@@ -5,13 +5,13 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import actions from '../actions'
+import actions from '../../actions'
 import Box from './elements/Box'
 import {FormControl, Col, ControlLabel, Button, FormGroup} from 'react-bootstrap'
 import {Form, ValidatedInput} from 'react-bootstrap-validation'
 import _ from 'lodash'
 import Alert from 'react-s-alert'
-import config from '../config/index'
+import config from '../../config/index'
 import {TableHeaderColumn, BootstrapTable} from 'react-bootstrap-table'
 
 // 引入dropzone和css

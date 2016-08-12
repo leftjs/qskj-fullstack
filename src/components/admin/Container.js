@@ -8,7 +8,7 @@ import _ from 'lodash'
 import {browserHistory} from 'react-router'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import actions from '../actions'
+import actions from '../../actions'
 import Alert from 'react-s-alert'
 
 
@@ -18,7 +18,7 @@ class Container extends React.Component {
 		menus: React.PropTypes.object
 	}
 	static defaultProps = {
-		userIcon: require('../images/img/user2-160x160.jpg'),
+		userIcon: require('../../images/img/user2-160x160.jpg'),
 		menus: {}
 	}
 	state = {

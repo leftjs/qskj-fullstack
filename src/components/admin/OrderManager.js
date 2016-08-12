@@ -5,7 +5,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import actions from '../actions'
+import actions from '../../actions'
 import Box from './elements/Box'
 import {Form, FormControl, Col, ControlLabel, Button, FormGroup} from 'react-bootstrap'
 import _ from 'lodash'
