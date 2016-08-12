@@ -13,8 +13,8 @@
 4. cd server/
 5. npm install
 6. npm run server
-7. open your chrome/safari/ie and input http://localhost:8008/ to browser **home** page
-8. open your chrome/safari/ie and ipnut http://localhost:8008/admin to browser **admin** page
+7. open your chrome/safari/ie and input http://localhost:8008/ to browser home page
+8. open your chrome/safari/ie and ipnut http://localhost:8008/admin to browser admin page
 ```
 
 
