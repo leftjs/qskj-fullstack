@@ -7,6 +7,7 @@ var cors = require('cors')
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var mongoose = require('mongoose')
+require('shelljs/global')
 import config from './config'
 import products from './routes/products'
 import suppliers from './routes/suppliers'
@@ -41,6 +42,15 @@ app.use('/api', routes);
 app.use('/api/users', users);
 app.use('/api/products', products)
 app.use('/api/suppliers', suppliers)
+app.get('/deploy', function (req,res,next) {
+	exec('sh ./deploy.sh',function(code, stdout, stderr) {
+		console.log('Exit code:', code);
+		console.log('Program output:', stdout);
+		console.log('Program stderr:', stderr);
+		res.send(stdout)
+	})
+
+})
 
 app.get('/admin', (req,res,next) => {
 	res.sendFile(path.resolve(__dirname, 'public', 'admin.html'))
