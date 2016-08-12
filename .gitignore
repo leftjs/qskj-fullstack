@@ -28,7 +28,7 @@ node_modules
 
 # Bower
 bower_components/
-/server/public/*.html
-/server/public/assets/
+#/server/public/*.html
+#/server/public/assets/
 .idea/
 *.bundle
