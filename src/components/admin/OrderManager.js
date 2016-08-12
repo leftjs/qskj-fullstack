@@ -10,10 +10,10 @@ import Box from './elements/Box'
 import {Form, FormControl, Col, ControlLabel, Button, FormGroup} from 'react-bootstrap'
 import _ from 'lodash'
 import Alert from 'react-s-alert'
-import VirtualizedSelect from 'react-virtualized-select'
 import 'react-virtualized/styles.css'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized-select/styles.css'
+import VirtualizedSelect from 'react-virtualized-select'
 class OrderManager extends React.Component{
 
 	state = {
