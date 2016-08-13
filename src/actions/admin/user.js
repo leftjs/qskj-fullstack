@@ -1,13 +1,13 @@
 /**
  * Created by zhangjiasheng on 7/23/16.
  */
-import * as types from './const'
-import * as req from '../services/request'
+import * as types from '../const'
+import * as req from '../../services/request'
 
 export const login = () => {
 	return dispatch => dispatch({
 		type: types.LOGIN,
-		payload: new Pormise((resolve, reject) => {
+		payload: new Promise((resolve, reject) => {
 			req.post('/users/login', body).then((res) => {
 				resolve(res)
 			}).catch((err) => {

@@ -1,8 +1,8 @@
 /**
  * Created by zhangjiasheng on 7/24/16.
  */
-import * as types from './const'
-import * as req from '../services/request'
+import * as types from '../const'
+import * as req from '../../services/request'
 
 export const add_supplier = (body) => {
 	return dispatch => dispatch({

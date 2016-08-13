@@ -35,11 +35,14 @@ app.use(require('webpack-hot-middleware')(compiler))
 app.get('/admin', function(req,res) {
 	res.sendFile(path.resolve(__dirname, 'src', 'admin.html'))
 })
+app.get('/', function(req,res) {
+	res.sendFile(path.resolve(__dirname, 'src', 'main.html'))
+})
 
 app.use('/admin/*', fallback(path.resolve(__dirname, 'src', 'admin.html')))
-app.use('/main/*', fallback(path.resolve(__dirname, 'src', 'main.html')))
-
 app.use(express.static('/assets'));
+app.use('/*', fallback(path.resolve(__dirname, 'src', 'main.html')))
+
 
 
 
@@ -54,4 +57,4 @@ app.listen(port, hostname, (err) => {
 });
 
 
-open('http://localhost:' + port + '/admin');
+open('http://localhost:' + port);

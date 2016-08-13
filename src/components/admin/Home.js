@@ -4,7 +4,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import actions from '../../actions'
+import actions from '../../actions/admin'
 class Home extends React.Component{
 
 	state = {

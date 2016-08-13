@@ -24,6 +24,11 @@ router.post('/', (req,res,next) => {
 
 })
 
+router.post('/login', (req,res,next) => {
+	console.log(req.body)
+	res.json({ok: true})
+})
+
 router.get('/list', (req,res,next) => {
 	let page = parseInt(req.query['page'])
 	const size = parseInt(req.query['size'])

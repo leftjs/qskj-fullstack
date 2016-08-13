@@ -8,7 +8,7 @@ import _ from 'lodash'
 import {browserHistory} from 'react-router'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import actions from '../../actions'
+import actions from '../../actions/admin'
 import Alert from 'react-s-alert'
 
 

@@ -1,7 +1,7 @@
 /**
  * Created by zhangjiasheng on 7/24/16.
  */
-import * as types from '../actions/const'
+import * as types from '../../actions/const'
 export const product = (state={}, action) => {
 	switch (action.type) {
 		case `${types.ADD_PRODUCT}_PENDING`:

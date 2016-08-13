@@ -4,7 +4,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import actions from '../../actions'
+import actions from '../../actions/admin'
 import Box from './elements/Box'
 import _ from 'lodash'
 import {Form, ValidatedInput, Radio, RadioGroup, FileValidator} from 'react-bootstrap-validation'

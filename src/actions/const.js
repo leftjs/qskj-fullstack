@@ -35,3 +35,10 @@ export const GET_ALL_SUPPLIERS = 'GET_ALL_SUPPLIERS'
 // 删除指定供应商
 export const DELETE_SUPPLIER_BY_ID = 'DELETE_SUPPLIER_BY_ID'
 
+
+// admin
+// -------------------------------------------------
+// front
+
+// 前台登录
+export const LOGIN_FRONT = "LOGIN_FRONT"

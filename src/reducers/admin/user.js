@@ -1,7 +1,7 @@
 /**
  * Created by zhangjiasheng on 7/23/16.
  */
-import * as types from '../actions/const'
+import * as types from '../../actions/const'
 
 export const user = (state = {}, action) => {
 	switch (action.type) {

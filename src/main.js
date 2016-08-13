@@ -5,13 +5,11 @@ import {Provider} from 'react-redux'
 import {Router, Route, browserHistory, IndexRoute} from 'react-router'
 import {syncHistoryWithStore} from 'react-router-redux'
 import configureStore from './stores/configureStore'
-import Main from './components/admin/Main';
-import ProductManager from './components/admin/ProductManager'
-import UserManager from './components/admin/UserManager'
-import OrderManager from './components/admin/OrderManager'
-import SupplierManager from './components/admin/SupplierManager'
-import Home from './components/admin/Home'
-const store = configureStore()
+import Main from './components/front/Main'
+import Home from './components/front/Home'
+import DevTools from './stores/DevTools'
+import ShopCar from './components/front/ShopCar'
+const store = configureStore('front')
 const history = syncHistoryWithStore(browserHistory, store)
 
 
@@ -19,14 +17,14 @@ const history = syncHistoryWithStore(browserHistory, store)
 // Render the main component into the dom
 ReactDOM.render(
 	<Provider store={store}>
-		<Router history={history}>
-			<Route path="/main" component={Main}>
-				<IndexRoute component={Home}/>
-				<Route path='productmanager' component={ProductManager}/>
-				<Route path='usermanager' component={UserManager}/>
-				<Route path='ordermanager' component={OrderManager}/>
-				<Route path='suppliermanager' component={SupplierManager}/>
-			</Route>
-		</Router>
+		<div>
+			<Router history={history}>
+				<Route path="/" component={Main}>
+					<IndexRoute component={Home}/>
+					<Route path="shopcar"  component={ShopCar} />
+				</Route>
+			</Router>
+			{/*{ process.env.NODE_ENV !== 'production' ? <DevTools/> : null}*/}
+		</div>
 	</Provider>
 	, document.getElementById('app'));
