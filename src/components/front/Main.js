@@ -7,10 +7,9 @@ import Container from './Container'
 class Main extends React.Component{
 	render(){
 		return (
-			<div>
-				{/*<Container/>*/}
+			<Container>
 				{this.props.children}
-			</div>
+			</Container>
 		)
 	}
 }

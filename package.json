@@ -74,7 +74,6 @@
     "react-bootstrap": "^0.30.0-rc.2",
     "react-bootstrap-table": "^2.3.8",
     "react-bootstrap-validation": "^0.1.11",
-    "react-css-modules": "^3.7.10",
     "react-dom": "^15.0.0",
     "react-dropzone-component": "^1.0.4",
     "react-image-crop": "^1.0.0-rc4",
