@@ -2,52 +2,52 @@
  * Created by zhangjiasheng on 16/8/13.
  */
 import React from 'react'
+import Radium, {StyleRoot} from 'radium'
+import _ from 'lodash'
+import {Navbar, NavDropdown, NavItem, MenuItem, Nav} from 'react-bootstrap'
+
+
+const menus = [{
+	name: 'starter',
+	text: '启动系统'
+}, {
+	name: 'forum',
+	text: '官方论坛'
+}, {
+	name: 'news',
+	text: '黑科技NEWS'
+}]
+
 class Container extends React.Component {
-
-
-
-	componentDidMount() {
-		$(this._shopcar).dropdown({
-			on: 'hover'
-		})
-
-	}
-	render(){
+	render() {
 		return (
-			<div>
-				<div className="ui borderless fixed main menu" ref={(view) => this._nav = view}>
-					<div className="ui text container">
-						<div href="#" className="header item">
-							<img className="logo" src={require('../../images/img/user2-160x160.jpg')}/>
-							Project Name
-						</div>
-						<a href="#" className="item active">Blog</a>
-						<a href="#" className="item">Articles</a>
-						<a href="#" className="ui right floated dropdown item" tabIndex={0} ref={(view) => this._shopcar = view}>
-							<i className="shop outline large icon" />
-							<div className="menu transition hidden" tabIndex={-1}>
-								<div className="item">Link Item</div>
-								<div className="item">Link Item</div>
-								<div className="divider" />
-								<div className="header">Header Item</div>
-								<div className="item">
-									<i className="dropdown icon" />
-									Sub Menu
-									<div className="menu transition hidden">
-										<div className="item">Link Item</div>
-										<div className="item">Link Item</div>
-									</div>
-								</div>
-								<div className="item">Link Item</div>
-							</div>
-						</a>
-					</div>
-				</div>
-
-				{this.props.children}
-			</div>
+			<Navbar>
+				<Navbar.Header>
+					<Navbar.Brand>
+						<a href="#">React-Bootstrap</a>
+					</Navbar.Brand>
+					<Navbar.Toggle />
+				</Navbar.Header>
+				<Navbar.Collapse>
+					<Nav activeKey={1}>
+						<NavItem eventKey={1} href="#">Link</NavItem>
+						<NavItem eventKey={2} href="#">Link</NavItem>
+						<NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+							<MenuItem eventKey={3.1}>Action</MenuItem>
+							<MenuItem eventKey={3.2}>Another action</MenuItem>
+							<MenuItem eventKey={3.3}>Something else here</MenuItem>
+							<MenuItem divider />
+							<MenuItem eventKey={3.3}>Separated link</MenuItem>
+						</NavDropdown>
+					</Nav>
+					<Nav pullRight>
+						<NavItem eventKey={1} href="#">Link Right</NavItem>
+						<NavItem eventKey={2} href="#">Link Right</NavItem>
+					</Nav>
+				</Navbar.Collapse>
+			</Navbar>
 		)
 	}
 }
 
-export default Container
+export default Radium(Container)
