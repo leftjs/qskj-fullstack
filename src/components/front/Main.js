@@ -3,13 +3,24 @@
  */
 import React from 'react'
 import Container from './Container'
+import { RouteTransition } from 'react-router-transition';
 
 class Main extends React.Component{
 	render(){
 		return (
-			<Container>
-				{this.props.children}
-			</Container>
+		<div>
+			<RouteTransition
+				pathname={this.props.location.pathname}
+				atEnter={{ opacity: 0 }}
+				atLeave={{ opacity: 0 }}
+				atActive={{ opacity: 1 }}
+			>
+				<Container>
+					{this.props.children}
+				</Container>
+			</RouteTransition>
+		</div>
+
 		)
 	}
 }

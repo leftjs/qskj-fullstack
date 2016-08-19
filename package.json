@@ -84,6 +84,7 @@
     "react-redux": "^4.4.5",
     "react-router": "^2.6.0",
     "react-router-redux": "^4.0.5",
+    "react-router-transition": "0.0.5",
     "react-s-alert": "^1.1.4",
     "react-select": "^1.0.0-beta14",
     "react-tap-event-plugin": "^1.0.0",

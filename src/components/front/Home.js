@@ -6,6 +6,7 @@ import actions from '../../actions/front'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {FlatButton,RaisedButton} from 'material-ui'
+import {browserHistory} from 'react-router'
 import * as colors from 'material-ui/styles/colors'
 
 
@@ -20,11 +21,8 @@ const styles = {
 		alignItems: 'center',
 		justifyContent: 'space-around',
 		width: '100%',
-		position: 'fixed',
 		height: 40,
-		zIndex: 999,
 		boxShadow: " 2px 2px 4px 1px rgba(0, 0, 0, .1)",
-		top: 100
 
 	},
 	addShoppingCar: {
@@ -43,7 +41,6 @@ const styles = {
 		color: colors.grey400
 	},
 	body: {
-		marginTop: 140,
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
@@ -109,6 +106,11 @@ class Home extends React.Component{
 	}
 
 
+	_handleBuyClick = () => {
+		browserHistory.push('/buy')
+	}
+
+
 	render(){
 		return (
 			<div>
@@ -129,7 +131,9 @@ class Home extends React.Component{
 							style={styles.buyNow}
 							backgroundColor={colors.orangeA200}
 							labelColor={colors.white}
-							label="立即购买"/>
+							label="立即购买"
+						  onClick={this._handleBuyClick}
+						/>
 					</div>
 				</div>
 				<div style={styles.body}>

@@ -9,6 +9,7 @@ import {syncHistoryWithStore} from 'react-router-redux'
 import configureStore from './stores/configureStore'
 import Main from './components/front/Main'
 import Home from './components/front/Home'
+import Buy from './components/front/Buy'
 import DevTools from './stores/DevTools'
 import ShopCar from './components/front/ShopCar'
 const store = configureStore('front')
@@ -42,7 +43,8 @@ ReactDOM.render(
 				<Router history={history}>
 					<Route path="/" component={Main}>
 						<IndexRoute component={Home}/>
-						<Route path="shopcar"  component={ShopCar} />
+						<Route path="shopcar" component={ShopCar} />
+						<Route path="buy" component={Buy} />
 					</Route>
 				</Router>
 				{/*{ process.env.NODE_ENV !== 'production' ? <DevTools/> : null}*/}
