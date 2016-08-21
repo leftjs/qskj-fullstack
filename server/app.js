@@ -7,6 +7,7 @@ var cors = require('cors')
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var mongoose = require('mongoose')
+import * as cityUtils from './utils/cityUtils'
 require('shelljs/global')
 import config from './config'
 import products from './routes/products'
@@ -24,6 +25,10 @@ global.throwCustomError = (status, msg) => {
 }
 
 mongoose.Promise = global.Promise
+
+// 插入城市列表
+cityUtils.insertToDB()
+
 var app = express();
 const root = path.join(__dirname, 'public')
 

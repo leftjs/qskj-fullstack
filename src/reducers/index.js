@@ -6,6 +6,7 @@ import {routerReducer} from 'react-router-redux'
 import * as user from './admin/user'
 import * as product from './admin/product'
 import * as userFront from './front/user'
+import * as shopcar from './front/shopcar'
 
 
 export const admin = combineReducers({
@@ -16,5 +17,6 @@ export const admin = combineReducers({
 
 export const front = combineReducers({
 	...userFront,
+	...shopcar,
 	routing: routerReducer
 })

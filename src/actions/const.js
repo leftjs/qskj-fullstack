@@ -42,3 +42,11 @@ export const DELETE_SUPPLIER_BY_ID = 'DELETE_SUPPLIER_BY_ID'
 
 // 前台登录
 export const LOGIN_FRONT = "LOGIN_FRONT"
+
+// 购物车
+// 指定商品数量添加1
+export const ITEM_ADD = 'ITEM_ADD'
+// 指定商品数量减少1
+export const ITEM_DELETE = 'ITEM_DELETE'
+// 设置指定商品数量
+export const ITEM_SET = 'ITEM_SET'

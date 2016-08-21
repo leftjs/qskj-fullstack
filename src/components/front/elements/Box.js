@@ -12,8 +12,9 @@ const styles = {
 		flexDirection: 'column',
 		justifyContent: 'flex-start',
 		border: `1px solid ${colors.grey300}`,
-		boxShadow: `2px 2px 5px 1px ${colors.grey300}`,
-		borderRadius: '5px'
+		boxShadow: `2px 2px 10px 4px ${colors.grey300}`,
+		borderRadius: '10px',
+		overflow: 'hidden'
 	},
 	title: {
 		fontSize: '1.5rem',
