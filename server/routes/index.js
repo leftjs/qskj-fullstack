@@ -10,7 +10,7 @@ router.post('/upload/single', uploadMiddleware.single('file'), (req,res,next) =>
 		console.log('result', result)
 		res.json(result)
 	}).catch((err) => {
-		throwCustomError(400, err.message)
+		return next(customError(400, err.message))
 	})
 })
 

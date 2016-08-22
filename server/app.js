@@ -18,10 +18,14 @@ import fallback from 'express-history-api-fallback'
 global.db = mongoose.connect(config.db_uri)
 
 // 自定义异常
-global.throwCustomError = (status, msg) => {
+global.customError = (status, msg) => {
+	if(typeof status == 'string') {
+		msg = status
+		status = null
+	}
 	var error = new Error(msg || '未知异常')
 	error.status = status || 500
-	throw  error
+	return error
 }
 
 mongoose.Promise = global.Promise
@@ -63,15 +67,19 @@ app.get('/admin', (req,res,next) => {
 app.get('/', (req,res,next) => {
 	res.sendFile(path.resolve(__dirname, 'public', 'main.html'))
 })
+
+
 app.use('/admin/*',fallback('admin.html', {root}))
 app.use('/*', fallback('main.html', {root}))
 
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
 });
+
 
 // error handlers
 
@@ -96,6 +104,7 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
 
 
 module.exports = app;

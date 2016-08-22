@@ -19,11 +19,11 @@ router.post('/',uploadMiddleware.array('files'), (req,res,next) => {
 			let id = body._id
 			delete body._id
 			product.update({_id: id}, {$set: body},(err,result) => {
-				if (err) throwCustomError(400, err.message)
+				if (err) return next(customError(400, err.message))
 				res.json(result)
 			})
 		}).catch((err) => {
-			throwCustomError(400, err.message)
+			return next(customError(400, err.message))
 		})
 	}else {
 		uploadMultiple(req.files).then((result) => {
@@ -32,13 +32,13 @@ router.post('/',uploadMiddleware.array('files'), (req,res,next) => {
 				image_url: result
 			}, (err,doc) => {
 				if(err) {
-					throwCustomError(400, err.message)
+					return next(customError(400, err.message))
 				}
 				console.log(doc)
 				res.json(doc)
 			})
 		}).catch((err) => {
-			throwCustomError(400, err.message)
+			return next(customError(400, err.message))
 		})
 	}
 
@@ -53,9 +53,9 @@ router.get('/list', (req,res,next) => {
 	if (page < 1) page = 1
 	console.log(page, size)
 	product.count({}, (err, count) => {
-		if(err) throwCustomError(400, err.message)
+		if(err) return next(customError(400, err.message))
 		product.find({}).skip(parseInt((page - 1 ) * size)).limit(parseInt(size)).exec((err, list) => {
-			if(err) throwCustomError(400, err.message)
+			if(err) return next(customError(400, err.message))
 			res.json({
 				data: list,
 				totalDataSize: count,
@@ -72,7 +72,7 @@ router.get('/list', (req,res,next) => {
  */
 router.get('/all', (req,res,next) => {
 	product.find({}).exec((err,list) => {
-		if(err) throwCustomError(400, err.message)
+		if(err) return next(customError(400, err.message))
 		res.json(list)
 	})
 })
@@ -80,11 +80,11 @@ router.get('/all', (req,res,next) => {
 router.delete('/:id', (req,res,next) => {
 	let id = req.params['id']
 	product.find({_id: id}).remove((err, {result}) => {
-		if(err) throwCustomError(400, err.message)
+		if(err) return next(customError(400, err.message))
 		if(result.ok > 0) {
 			res.json('success')
 		}else {
-			throwCustomError(400, "删除失败")
+			return next(customError(400, "删除失败"))
 		}
 	})
 })

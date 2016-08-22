@@ -9,7 +9,7 @@ router.post('/', (req,res,next) => {
 		let id = body._id
 		delete body._id
 		user.update({_id: id }, {$set: body}, (err, doc) => {
-			if(err) throwCustomError(400, err.message)
+			if(err) return next(customError(400, err.message))
 			res.json(doc)
 		})
 	}else {
@@ -17,17 +17,13 @@ router.post('/', (req,res,next) => {
 			...req.body,
 			validated: false
 		}, (err,doc) => {
-			if (err) throwCustomError(400,err.message)
+			if (err) return next(customError(400,err.message))
 			res.json(doc)
 		})
 	}
 
 })
 
-router.post('/login', (req,res,next) => {
-	console.log(req.body)
-	res.json({ok: true})
-})
 
 router.get('/list', (req,res,next) => {
 	let page = parseInt(req.query['page'])
@@ -38,9 +34,9 @@ router.get('/list', (req,res,next) => {
 		page = 1
 	}
 	user.count({}).exec((err,count) => {
-		if (err) throwCustomError(400, err.message)
+		if (err) return next(customError(400, err.message))
 		user.find({validated}).skip((page - 1) * size).limit(size).exec((err,list) => {
-			if (err) throwCustomError(400, err.message)
+			if (err) return next(customError(400, err.message))
 			res.json({
 				data: list,
 				totalDataSize: count,
@@ -53,7 +49,7 @@ router.get('/list', (req,res,next) => {
 
 router.get('/list/all', (req,res,next) => {
 	user.find({}).exec((err, list) => {
-		if(err) throwCustomError(400, err.message)
+		if(err) return next(customError(400, err.message))
 		res.json(list)
 	})
 })
@@ -61,11 +57,11 @@ router.get('/list/all', (req,res,next) => {
 router.delete('/:id', (req,res,next) => {
 	const id = req.params['id']
 	user.find({_id: id}).remove((err, {result}) => {
-		if (err) throwCustomError(400, err.message)
+		if (err) return next(customError(400, err.message))
 		if(result.ok > 0) {
 			res.json('success')
 		}else{
-			throwCustomError(400, "删除失败")
+			return next(customError(400, "删除失败"))
 		}
 	})
 })
@@ -75,10 +71,26 @@ router.get('/:id/validate', (req,res,next) => {
 	user.update({_id: id}, {$set: {
 		validated:true
 	}}, (err,count) => {
-		if(err) throwCustomError(err)
+		if(err) return next(customError(err))
 		res.json({
 			count
 		})
 	})
+})
+
+router.post('/login', (req,res,next) => {
+	const body = req.body
+	const username = body.username
+	const password = body.password
+	const role = body.role
+
+	user.findOne({username, password,role},(err, doc) => {
+		if (err) return next(customError(400, '数据库出错'))
+		if (!doc) return next(customError(400,'用户名或密码出错'))
+		console.log('------->>>>>>>')
+		return res.json(doc)
+	})
+
+
 })
 module.exports = router;

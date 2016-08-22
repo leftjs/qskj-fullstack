@@ -13,7 +13,7 @@ router.post('/', (req, res, next) => {
 		email: body.email,
 		competency: body.competency
 	}, (err, doc) => {
-		if(err) throwCustomError(400, err.message)
+		if(err) return next(customError(400, err.message))
 		res.json(doc)
 	})
 })
@@ -27,9 +27,9 @@ router.get('/list', (req,res,next) => {
 	let size = parseInt(req.query['size'])
 	if (page < 1) page = 1
 	supplier.count({}, (err, count) => {
-		if(err) throwCustomError(400, err.message)
+		if(err) return next(customError(400, err.message))
 		supplier.find({}).skip(parseInt((page - 1 ) * size)).limit(parseInt(size)).exec((err, list) => {
-			if(err) throwCustomError(400, err.message)
+			if(err) return next(customError(400, err.message))
 			res.json({
 				data: list,
 				totalDataSize: count,
@@ -45,7 +45,7 @@ router.get('/list', (req,res,next) => {
  */
 router.get('/all', (req,res,next) => {
 	supplier.find({}).exec((err,list ) => {
-		if (err) throwCustomError(400, err.message)
+		if (err) return next(customError(400, err.message))
 		res.json(list)
 	})
 })
@@ -57,11 +57,11 @@ router.delete('/:id', (req,res,next) => {
 	let id = req.params['id']
 	supplier.find({_id: id}).remove((err, {result}) => {
 		console.log(result.ok)
-		if (err) throwCustomError(400, err.message)
+		if (err) return next(customError(400, err.message))
 		if (result.ok > 0) {
 			res.json('success')
 		}else {
-			throwCustomError(400, "删除失败")
+			return next(customError(400, "删除失败"))
 		}
 	})
 })

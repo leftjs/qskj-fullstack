@@ -14,4 +14,4 @@ var citySchema = Schema({
 	level: Number
 })
 
-export default mongoose.model('City', citySchema)
+export default mongoose.model('city', citySchema)

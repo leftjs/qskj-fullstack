@@ -18,9 +18,9 @@ router.get('/list', (req,res,next) => {
 	if (page < 1) page = 1
 	console.log(page, size)
 	product.count({}, (err, count) => {
-		if(err) throwCustomError(400, err.message)
+		if(err) return next(customError(400, err.message))
 		product.find({}).skip(parseInt((page - 1 ) * size)).limit(parseInt(size)).exec((err, list) => {
-			if(err) throwCustomError(400, err.message)
+			if(err) return next(customError(400, err.message))
 			res.json({
 				data: list,
 				totalDataSize: count,

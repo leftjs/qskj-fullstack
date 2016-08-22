@@ -3,7 +3,7 @@
  */
 import fs from 'fs'
 import path from 'path'
-import City from '../models/city'
+import city from '../models/city'
 
 const getAllCityFromFile = () => {
 	return new Promise((resolve, reject) => {
@@ -18,12 +18,12 @@ const getAllCityFromFile = () => {
 
 export const insertToDB = async () => {
 	const jsonData = await getAllCityFromFile()
-	City.find({}).count().then(count =>{
+	city.find({}).count().then(count =>{
 		if (count > 0 ) {
 			console.log("城市列表已经存在,不需要插入")
 			return
 		}else {
-			City.insertMany(jsonData).then((result) => {
+			city.insertMany(jsonData).then((result) => {
 				console.log("城市列表插入成功")
 			}).catch(err => {
 				console.log('城市列表插入失败,请检查')
