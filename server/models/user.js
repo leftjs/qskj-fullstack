@@ -4,10 +4,22 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 const userSchema = Schema({
-	username: String,
-	password: String,
+	username: {
+		type: String,
+		required: true,
+		index: {
+			unique: true
+		}
+	},
+	password: {
+		type: String,
+		required: true
+	},
 	email: String,
-	validated: Boolean, // 是否认证
+	validated: {
+		type: Boolean,
+		default: false
+	}, // 是否认证
 	role: {
 		type: String,
 		enum: [
@@ -15,8 +27,10 @@ const userSchema = Schema({
 			"customer", // 顾客
 			"staff",  // 员工
 			"admin" // 管理员
-		]
+		],
+		default: 'customer'
 	}
 })
+
 
 export default mongoose.model('User', userSchema)

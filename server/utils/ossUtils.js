@@ -3,6 +3,8 @@
  */
 var OSS = require('ali-oss').Wrapper
 var fs = require('fs')
+import config from '../config'
+const ossConfig = config.oss
 var multer = require('multer')
 var storage = multer.memoryStorage()
 import _ from 'lodash'
@@ -10,9 +12,9 @@ import uuid from 'node-uuid'
 
 
 var client = new OSS({
-	region: 'oss-cn-hangzhou',
-	accessKeyId: 'D7wyxh0NcajbB9Bk',
-	accessKeySecret: 'qIB03kCjbjC3q6WIO1rF6FQGIBr5uJ'
+	region: ossConfig.region,
+	accessKeyId: ossConfig.accessKeyId,
+	accessKeySecret: ossConfig.accessKeySecret
 })
 
 export const uploadSingle = (file) => {
