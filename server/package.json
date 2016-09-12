@@ -21,6 +21,7 @@
     "morgan": "~1.7.0",
     "multer": "^1.1.0",
     "node-uuid": "^1.4.7",
+    "nodemailer": "^2.6.0",
     "shelljs": "^0.7.3"
   },
   "devDependencies": {
