@@ -13,7 +13,8 @@ function filterJSON(res) {
 }
 
 
-function filterStatus(res) {
+function filterStatus(res,res2) {
+	console.log('filterStatus', res,res2)
 	if (res.status >= 200 && res.status < 400) {
 		return res
 	}

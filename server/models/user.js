@@ -20,11 +20,14 @@ const userSchema = Schema({
 		type: Boolean,
 		default: false
 	}, // 是否认证
+	realname: String,
+	address: String,
 	role: {
 		type: String,
 		enum: [
 			"supplier", // 供应商
-			"customer", // 顾客
+			"customer", // 顾客,
+			"company", // 公司消费者
 			"staff",  // 员工
 			"admin" // 管理员
 		],

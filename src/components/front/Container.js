@@ -11,6 +11,9 @@ import logo from '../../images/front/logo.png'
 import SearchSvgIcon from 'material-ui/svg-icons/action/search'
 import ShoppingCarSvgIcon from 'material-ui/svg-icons/action/shopping-cart'
 import { browserHistory } from 'react-router'
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
+import Alert from 'react-s-alert'
 const menus = [{
 	name: 'starter',
 	text: '启动系统'
@@ -53,6 +56,7 @@ class Container extends React.Component {
 	render() {
 		return (
 			<div >
+				<Alert stack={{limit: 3}} html={true} timeout={2000} offset={0} position='bottom-right' effect="slide"/>
 				<div style={[styles.verticalCenter, styles.nav]}>
 					<div style={styles.verticalCenter}>
 						<img src={logo} alt="logo" style={styles.logo}/>

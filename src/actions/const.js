@@ -40,6 +40,8 @@ export const DELETE_SUPPLIER_BY_ID = 'DELETE_SUPPLIER_BY_ID'
 // -------------------------------------------------
 // front
 
+// 获取城市列表
+export const GET_CITY_LIST = "GET_CITY_LIST"
 // 前台登录
 export const LOGIN_FRONT = "LOGIN_FRONT"
 
@@ -50,3 +52,9 @@ export const ITEM_ADD = 'ITEM_ADD'
 export const ITEM_DELETE = 'ITEM_DELETE'
 // 设置指定商品数量
 export const ITEM_SET = 'ITEM_SET'
+
+
+// 用户注册
+export const SEND_VALIDATION_MAIL = 'SEND_VALIDATION_MAIL'
+// 个人用户注册
+export const REGISTER_PERSONAL = 'REGISTER_PERSONAL'

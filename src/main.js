@@ -12,14 +12,14 @@ import Home from './components/front/Home'
 import Buy from './components/front/Buy'
 import DevTools from './stores/DevTools'
 import ShopCar from './components/front/ShopCar'
+import Register from './components/front/Register'
 const store = configureStore('front')
 const history = syncHistoryWithStore(browserHistory, store)
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import {cyan500} from 'material-ui/styles/MuiThemeProvider'
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
-
+import * as colors from 'material-ui/styles/colors'
+import {fade} from 'material-ui/utils/colorManipulator'
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941
 injectTapEventPlugin();
@@ -28,7 +28,20 @@ injectTapEventPlugin();
 // 自定义样式
 const muiTheme = getMuiTheme({
 	palette: {
-		textColor: cyan500
+		primary1Color: colors.cyan500,
+		primary2Color: colors.cyan700,
+		primary3Color: colors.grey400,
+		accent1Color: colors.pinkA200,
+		accent2Color: colors.grey100,
+		accent3Color: colors.grey500,
+		textColor: colors.darkBlack,
+		alternateTextColor: colors.white,
+		canvasColor: colors.white,
+		borderColor: colors.grey300,
+		disabledColor: fade(colors.darkBlack, 0.3),
+		pickerHeaderColor: colors.cyan500,
+		clockCircleColor: fade(colors.darkBlack, 0.07),
+		shadowColor: colors.fullBlack,
 	},
 	appBar: {
 		height: 100
@@ -45,6 +58,7 @@ ReactDOM.render(
 						<IndexRoute component={Home}/>
 						<Route path="shopcar" component={ShopCar} />
 						<Route path="buy" component={Buy} />
+						<Route path="register" component={Register}/>
 					</Route>
 				</Router>
 				{/*{ process.env.NODE_ENV !== 'production' ? <DevTools/> : null}*/}

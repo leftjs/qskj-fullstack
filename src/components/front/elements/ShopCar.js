@@ -3,12 +3,14 @@
  */
 import React from 'react'
 import Radium from 'radium'
+import {browserHistory} from 'react-router'
 import {Avatar,RaisedButton, Table, TableHeader, TableBody, TableRow, TableHeaderColumn, TableRowColumn, FlatButton, Checkbox, IconButton, TextField} from 'material-ui'
 import * as colors from 'material-ui/styles/colors'
 import Add from 'material-ui/svg-icons/content/add-circle-outline'
 import Remove from 'material-ui/svg-icons/content/remove-circle-outline'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 import RadioBtnUnchecked from 'material-ui/svg-icons/toggle/radio-button-unchecked'
+
 const styles = {
 	container: {
 		// padding: '1em'
@@ -31,21 +33,16 @@ class ShopCar extends React.Component {
 						background: colors.lightBlue50,
 					}}>
 						<TableRow>
-							{['商品名称', '单价', '数量', '应付金额', '备注'].map((name, index) => {
-								if (index == 0) {
-									return (<TableHeaderColumn colSpan="3" style={{color: colors.grey700}} key={`header_${index}`}>{name}</TableHeaderColumn>)
-
-								}else if(index == 2) {
-									// 数量
-									return (<TableHeaderColumn colSpan="2" style={{color: colors.grey700, textAlign: 'center'}} key={`header_${index}`}>{name}</TableHeaderColumn>)
-								}
-								return (<TableHeaderColumn style={{color: colors.grey700}} key={`header_${index}`}>{name}</TableHeaderColumn>)
-							})}
+							<TableHeaderColumn style={{color: colors.grey700, textAlign: 'center', width: '40%'}}>商品名称</TableHeaderColumn>
+							<TableHeaderColumn style={{color: colors.grey700, textAlign: 'center', width: '10%'}}>单价</TableHeaderColumn>
+							<TableHeaderColumn style={{color: colors.grey700, textAlign: 'center', width: '20%'}}>数量</TableHeaderColumn>
+							<TableHeaderColumn style={{color: colors.grey700, textAlign: 'center', width: '10%'}}>应付金额</TableHeaderColumn>
+							<TableHeaderColumn style={{color: colors.grey700, textAlign: 'center', width: '20%'}}>备注</TableHeaderColumn>
 						</TableRow>
 					</TableHeader>
 					<TableBody displayRowCheckbox={false}>
 						<TableRow>
-							<TableRowColumn colSpan="3" >
+							<TableRowColumn style={{width: '40%'}}>
 								<div style={{
 								display: 'flex',
 								flexDirection: 'row',
@@ -60,6 +57,8 @@ class ShopCar extends React.Component {
 									/>
 									<Avatar size={60}  src={require('../../../images/img/user2-160x160.jpg')}/>
 									<span style={{
+										display: 'block',
+										width: '100%',
 										marginLeft: 10,
 								    overflow: 'hidden',
                     whiteSpace: 'nowrap',
@@ -67,20 +66,20 @@ class ShopCar extends React.Component {
 									}}>青霜启动系统</span>
 								</div>
 							</TableRowColumn>
-							<TableRowColumn>¥123</TableRowColumn>
-							<TableRowColumn colSpan="2" style={{textAlign: 'center'}}>
+							<TableRowColumn style={{textAlign: 'center', width: '10%'}}>¥123</TableRowColumn>
+							<TableRowColumn style={{textAlign: 'center', width: '20%'}}>
 								<IconButton>
 									<Add color={colors.grey500}/>
 								</IconButton>
-								<TextField style={{width: '3rem'}} inputStyle={{textAlign: 'center'}}/>
+								<TextField style={{width: '40%'}} inputStyle={{textAlign: 'center'}}/>
 								<IconButton>
 									<Remove color={colors.grey500}/>
 								</IconButton>
 							</TableRowColumn>
-							<TableRowColumn>¥123</TableRowColumn>
-							<TableRowColumn>
-								<div style={{padding: '0 10px 0 0'}}>
-									<TextField name="remark" style={{width: '100%'}} hintText="无"/>
+							<TableRowColumn style={{textAlign: 'center', width: '10%'}}>¥123</TableRowColumn>
+							<TableRowColumn style={{textAlign: 'center', width: '20%'}}>
+								<div>
+									<TextField name="remark" style={{width: '100%', textAlign: 'center'}} hintText="无"/>
 								</div>
 							</TableRowColumn>
 						</TableRow>
@@ -132,7 +131,9 @@ class ShopCar extends React.Component {
 						}}>
 							共<span style={styles.noticeNumber}>2</span>件商品,已选择<span style={styles.noticeNumber}>2</span>件商品,总计(不含运费): <span style={styles.noticeNumber}>¥123</span>
 						</div>
-						<RaisedButton label="现在结算" backgroundColor={colors.orangeA200} labelColor={colors.white}/>
+						<RaisedButton label="现在结算" onClick={() => {
+							browserHistory.push('register')
+						}} backgroundColor={colors.orangeA200} labelColor={colors.white}/>
 					</div>
 
 				</div>

@@ -3,7 +3,12 @@ var router = express.Router();
 import user from '../models/user'
 import _ from 'lodash'
 import * as authUtils from '../utils/authUtils'
+import * as mailUtils from '../utils/mailUtils'
+import * as md5Utils from '../utils/md5Utils'
 
+/**
+ * 后台添加用户
+ */
 router.post('/', (req,res,next) => {
 	if(_.has(req.body, '_id')){
 		let body = req.body
@@ -26,6 +31,53 @@ router.post('/', (req,res,next) => {
 
 })
 
+/**
+ * 邮箱下发验证码
+ */
+router.post('/send/validation/mail', (req,res,next) => {
+	let {mail, salt} = req.body
+	console.log(mail, salt)
+	let md5Str = md5Utils.md5(`${mail}${salt}`)
+	mailUtils.sendMail(mail, '验证码邮件,请勿回复', `<h3>您的验证码为:</h3><p style="font-size: 20px; color: red;">${md5Str.substring(md5Str.length - 4)}</p>`, (err, info) => {
+		if(err) {
+			return next(err)
+		}else {
+			res.json(salt)
+		}
+	})
+})
+
+/**
+ * 个人用户注册
+ */
+router.post('/register/personal', (req,res,next) => {
+	let {
+		mail,
+		salt,
+		password,
+		username,
+		realname,
+		address,
+		code,
+	} = req.body
+	let md5Str = md5Utils.md5(`${mail}${salt}`)
+	if (md5Str.substring(md5Str.length - 4) != code) {
+		return next(customError(400, '验证码错误,请返回检查'))
+	}
+	user.create({
+		email: mail,
+		username,
+		password,
+		role: 'customer',
+		address,
+		realname,
+	},(err, doc) => {
+		if (err) return next(customError(400, err.message))
+		if (!doc) return next(customError(400, '用户注册失败'))
+		delete doc.password
+		res.json(doc)
+	})
+})
 
 router.get('/list', (req,res,next) => {
 	let page = parseInt(req.query['page'])
@@ -113,8 +165,8 @@ router.get('/login/with/token', (req,res,next) => {
 			delete user.password
 			return res.json(user)
 		})
-
 	})
 })
+
 
 module.exports = router;
