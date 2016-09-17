@@ -48,29 +48,48 @@ router.post('/send/validation/mail', (req,res,next) => {
 })
 
 /**
- * 个人用户注册
+ * 个人/企业用户注册
  */
-router.post('/register/personal', (req,res,next) => {
+router.post('/register', (req,res,next) => {
 	let {
+		username,
+		realname,
+		code,
 		mail,
 		salt,
 		password,
-		username,
-		realname,
+		companyName,
+		licenceCode,
+		businessTime,
+		fixedPhone,
+		businessArea,
 		address,
-		code,
+		image1,
+		image2,
+		image3,
+		type
 	} = req.body
 	let md5Str = md5Utils.md5(`${mail}${salt}`)
 	if (md5Str.substring(md5Str.length - 4) != code) {
 		return next(customError(400, '验证码错误,请返回检查'))
 	}
 	user.create({
-		email: mail,
 		username,
-		password,
-		role: 'customer',
-		address,
+		role: type,
 		realname,
+		email: mail,
+		companyName,
+		password,
+		licenceCode,
+		businessTime,
+		fixedPhone,
+		businessArea,
+		address,
+		images: {
+			image1,
+			image2,
+			image3
+		}
 	},(err, doc) => {
 		if (err) return next(customError(400, err.message))
 		if (!doc) return next(customError(400, '用户注册失败'))

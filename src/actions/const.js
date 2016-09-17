@@ -42,6 +42,9 @@ export const DELETE_SUPPLIER_BY_ID = 'DELETE_SUPPLIER_BY_ID'
 
 // 获取城市列表
 export const GET_CITY_LIST = "GET_CITY_LIST"
+// 上传单个文件
+export const UPLOAD_SINGLE = 'UPLOAD_SINGLE'
+
 // 前台登录
 export const LOGIN_FRONT = "LOGIN_FRONT"
 
@@ -58,3 +61,5 @@ export const ITEM_SET = 'ITEM_SET'
 export const SEND_VALIDATION_MAIL = 'SEND_VALIDATION_MAIL'
 // 个人用户注册
 export const REGISTER_PERSONAL = 'REGISTER_PERSONAL'
+// 企业用户注册
+export const REGISTER_COMPANY = 'REGISTER_COMPANY'

@@ -13,18 +13,20 @@ function filterJSON(res) {
 }
 
 
-function filterStatus(res,res2) {
-	console.log('filterStatus', res,res2)
+function filterStatus(res) {
+
+	console.log('filterStatus', res)
 	if (res.status >= 200 && res.status < 400) {
 		return res
 	}
 	else {
 		let error = new Error(res.statusText);
-		error.res = res;
+		error.res = res.json()
 		error.type = 'http';
 		throw error;
 	}
 }
+
 
 
 export function get(url,params) {
@@ -125,7 +127,7 @@ export function upload(url, data) {
 	console.info(`Body: `, data)
 
 	return fetch(url, {
-		method: 'PUT',
+		method: 'POST',
 		body: data,
 
 	})

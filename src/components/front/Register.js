@@ -8,6 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 import {MenuItem,SelectField} from 'material-ui'
 import Box from './elements/Box'
 import actions from '../../actions/front'
@@ -27,23 +28,31 @@ class Register extends React.Component {
 	state = {
 		stepIndex: 0,
 		resendLabel: '发送',
-		type: '', // personal | company
 		sheng: [],
 		di: [],
 		xian: [],
 		selectedSheng: '',
 		selectedDi: '',
 		selectedXian: '',
+		triad: 'no',
+		image1: '', // 工商营业执照扫描件
+		image2: '', // 组织机构代码扫描件
+		image3: '', // 税务登记证扫描件
 		registerEntity: {
-			mail: '',
-			salt: '',
-			code: '',
-			password: '',
-			repassword: '',
-			username: '',
-			realname: '',
-			detailAddress: '',
-			type: ''
+			mail: '', // 邮箱
+			salt: '', // 盐
+			code: '', // 验证码
+			password: '', // 密码
+			repassword: '', // 确认密码
+			username: '', // 用户名
+			realname: '', // 真实姓名
+			detailAddress: '', // 详细地址
+			type: '', // 账号类型 personal | company
+			companyName: '', // 公司名称
+			licenceCode: '', // 营业执照注册号
+			businessTime: 0, // 营业年限
+			fixedPhone: '', // 固定电话
+			businessArea: '', // 经营范围
 		},
 		registerInputError: {
 			mail: '',
@@ -53,7 +62,12 @@ class Register extends React.Component {
 			sheng: '',
 			di: '',
 			xian: '',
-			detailAddress: ''
+			detailAddress: '',
+			companyName: '', // 公司名称
+			licenceCode: '', // 营业执照注册号
+			businessTime: '', // 营业年限
+			fixedPhone: '', // 固定电话
+			businessArea: '', // 经营范围
 		}
 	}
 
@@ -66,8 +80,21 @@ class Register extends React.Component {
 	 * @private
 	 */
 	_handleNext = () => {
-		const {stepIndex, registerInputError, registerEntity, selectedSheng, selectedDi, selectedXian} = this.state
-		const {registerPersonal} = this.props.actions
+
+
+		const {
+			stepIndex,
+			registerInputError,
+			registerEntity,
+			selectedSheng,
+			selectedDi,
+			selectedXian,
+			triad,
+			image1, // 工商营业执照扫描件
+			image2, // 组织机构代码扫描件
+			image3, // 税务登记证扫描件
+		} = this.state
+		const {registerPersonal,registerCompany} = this.props.actions
 
 		// 第一步中所有项目填写完整后才能进入下一步
 		if (stepIndex == 0) {
@@ -96,68 +123,151 @@ class Register extends React.Component {
 			if(_.size(error)) {
 				return
 			}
-		}else if(stepIndex == 1){
-			if (registerEntity.type = '') {
+		} else if (stepIndex == 2) {
+			if (registerEntity.type == 'customer' || registerEntity.type == '') {
+
+				const error = {}
+				if (!registerEntity.username) {
+					error['username'] = '用户名不能为空'
+				}
+				if (!registerEntity.realname) {
+					error['realname'] = '姓名不能为空'
+				}
+				if (!registerEntity.detailAddress) {
+					error['detailAddress'] = '详细地址不能为空'
+				}
+				if (!selectedSheng) {
+					error['sheng'] = '请选择省'
+				}
+				if (!selectedDi) {
+					error['di'] = '请选择市'
+				}
+				if (!selectedXian) {
+					error['xian'] = '请选择县'
+				}
+
 				this.setState({
-					registerEntity: {
-						...registerEntity,
-						type: 'customer' // 默认为个人注册
+					registerInputError: {
+						...registerInputError,
+						...error
 					}
 				})
-			}
-		}
-		else if (stepIndex == 2) {
-			const error = {}
-			if (!registerEntity.username) {
-				error['username'] = '用户名不能为空'
-			}
-			if (!registerEntity.realname) {
-				error['realname'] = '姓名不能为空'
-			}
-			if (!registerEntity.detailAddress) {
-				error['detailAddress'] = '详细地址不能为空'
-			}
-			if (!selectedSheng) {
-				error['sheng'] = '请选择省'
-			}
-			if (!selectedDi) {
-				error['di'] = '请选择市'
-			}
-			if (!selectedXian) {
-				error['xian'] = '请选择县'
-			}
 
-			this.setState({
-				registerInputError: {
-					...registerInputError,
-					...error
+				// 判断是否有错
+				if(_.size(error)) {
+					return
+				} else{
+					// 提交注册
+					const {mail, salt, code, username, password, realname, detailAddress, type} = registerEntity
+					const address = `${selectedSheng}${selectedDi}${selectedXian}${detailAddress}`
+					if(type == 'customer') {
+						// 个人注册
+						registerPersonal({
+							mail,
+							salt,
+							code,
+							username,
+							password,
+							realname,
+							address,
+							type
+						}).then((res) => {
+							console.log(res)
+							Alert.success("注册成功")
+							this.setState({
+								stepIndex: 3,
+							})
+						}).catch((err) => {
+							err.res.then((value) => {
+								Alert.error(value.message)
+							})
+							this.setState({
+								stepIndex: 2,
+							})
+						})
+					}
 				}
-			})
 
-			// 判断是否有错
-			if(_.size(error)) {
-				return
-			} else{
-				// 提交注册
-				const {mail, salt, code, username, password, realname, detailAddress, type} = registerEntity
-				const address = `${selectedSheng}${selectedDi}${selectedXian}${detailAddress}`
-				if(type == 'customer') {
-					// 个人注册
-					registerPersonal({
+			} else if (registerEntity.type == 'company') {
+
+				const error = {}
+				const {mail, code, companyName, password, detailAddress, businessTime,licenceCode, fixedPhone, businessArea } = registerEntity
+				if (!companyName) {
+					error['companyName'] = '请输入企业名称'
+				}
+				if (!licenceCode) {
+					error['licenceCode'] = '请输入营业执照注册号'
+				}
+				if (!businessTime) {
+					error['businessTime']	= '请输入营业年限'
+				}
+				if (!fixedPhone) {
+					error['fixedPhone'] = '请输入固定电话'
+				}
+				if (!businessArea) {
+					error['businessArea'] = '请输入经营范围'
+				}
+				if (!detailAddress) {
+					error['detailAddress'] = '详细地址不能为空'
+				}
+				if (!selectedSheng) {
+					error['sheng'] = '请选择省'
+				}
+				if (!selectedDi) {
+					error['di'] = '请选择市'
+				}
+				if (!selectedXian) {
+					error['xian'] = '请选择县'
+				}
+				if (triad == 'yes' && !image1) {
+					Alert.error("请先上传相关扫描件")
+					return
+				}
+				if (triad == 'no' && (!image1 || !image2 || !image3)) {
+					Alert.error("请先上传相关扫描件")
+					return
+				}
+
+
+
+				this.setState({
+					registerInputError: {
+						...registerInputError,
+						...error
+					}
+				})
+
+				// 判断是否有错
+				if(_.size(error)) {
+					console.log(error)
+					return
+				} else{
+					// 提交注册
+					const {mail, salt, code, companyName, password, detailAddress, businessTime, licenceCode, fixedPhone, businessArea ,type} = registerEntity
+					const address = `${selectedSheng}${selectedDi}${selectedXian}${detailAddress}`
+					// 企业用户注册
+					registerCompany({
 						mail,
 						salt,
 						code,
-						username,
+						companyName,
 						password,
-						realname,
-						address
+						address,
+						detailAddress,
+						businessTime,
+						fixedPhone,
+						licenceCode,
+						businessArea ,
+						type
 					}).then((res) => {
 						Alert.success("注册成功")
 						this.setState({
 							stepIndex: 3,
 						})
 					}).catch((err) => {
-						Alert.error('验证码出错')
+						err.res.then((value) => {
+							Alert.error(value.message)
+						})
 						console.log(err)
 						this.setState({
 							stepIndex: 2,
@@ -165,11 +275,9 @@ class Register extends React.Component {
 					})
 				}
 			}
+
 		}
 
-		if (stepIndex == 3) {
-			browserHistory.push('/')
-		}
 
 		this.setState({
 			stepIndex: stepIndex < 2 ? stepIndex + 1 : stepIndex,
@@ -208,6 +316,11 @@ class Register extends React.Component {
 
 	}
 
+	/**
+	 * 处理账号类型的点击事件
+	 * @param type
+	 * @private
+	 */
 	_handleTypeClick = (type) => {
 		this.setState({
 			registerEntity: {
@@ -216,6 +329,17 @@ class Register extends React.Component {
 			}
 		})
 		this._handleNext()
+	}
+
+	/**
+	 * 三证合一按钮的点击
+	 * @param e
+	 * @private
+	 */
+	_handleTriadChange = (e) => {
+		this.setState({
+			triad: e.target.value
+		})
 	}
 
 	/**
@@ -297,10 +421,52 @@ class Register extends React.Component {
 		}
 	}
 
-
+	/**
+	 * 处理select框的变动
+	 * @param key
+	 * @param event
+	 * @param index
+	 * @param value
+	 * @private
+	 */
 	_handleAddressChange = (key, event, index, value) => {
 		this.setState({
 			[key]: value
+		})
+	}
+
+	/**
+	 * 处理上传按钮的点击事件
+	 * @param ele
+	 * @param e
+	 * @private
+	 */
+	_handleUploadClick = (ele, e) => {
+		// 点击真实的上传按钮
+		ele.click()
+
+	}
+
+	/**
+	 * 处理文件上传事件
+	 * @param ele
+	 * @param e
+	 * @private
+	 */
+	_handleUploadChange = (ele, key, e) => {
+		let formData = new FormData()
+		let file = ele.files[0]
+		if (file.size > 3 * 1000 * 1000) {
+			Alert.error('图片尺寸过大,请保证图片小于3M')
+			return
+		}
+		formData.append('file', ele.files[0])
+		this.props.actions.uploadSingle(formData).then((res) => {
+			this.setState({
+				[key]: res.value
+			})
+		}).catch((err) => {
+			console.log(err)
 		})
 	}
 
@@ -324,6 +490,11 @@ class Register extends React.Component {
 
 	}
 
+	/**
+	 * 获取地区列表
+	 * @param sheng
+	 * @private
+	 */
 	_getDiList = (sheng) => {
 		const {getCityList} = this.props.actions
 		getCityList({level: 2, sheng}).then((res) => {
@@ -339,6 +510,12 @@ class Register extends React.Component {
 		})
 	}
 
+	/**
+	 * 获取县级列表
+	 * @param sheng
+	 * @param di
+	 * @private
+	 */
 	_getXianList = (sheng, di) => {
 		const {getCityList} = this.props.actions
 		getCityList({level: 3, sheng, di}).then((res) => {
@@ -361,7 +538,7 @@ class Register extends React.Component {
 	 * @private
 	 */
 	_renderStepContent = (stepIndex) => {
-		const {resendLabel, registerInputError} = this.state
+		const {resendLabel, registerInputError,registerEntity} = this.state
 
 		switch (stepIndex) {
 			case 0:
@@ -433,7 +610,7 @@ class Register extends React.Component {
 							</div>
 						}>
 						</FlatButton>
-						<FlatButton style={{marginLeft: 50, textAlign: 'left', height: 'auto', width: 200, borderRadius: 5, boxShadow: `2px 2px 10px 4px ${colors.grey300}`, overflow: 'hidden'}} onTouchTap={this._handleNext} icon={
+						<FlatButton style={{marginLeft: 50, textAlign: 'left', height: 'auto', width: 200, borderRadius: 5, boxShadow: `2px 2px 10px 4px ${colors.grey300}`, overflow: 'hidden'}} onTouchTap={this._handleTypeClick.bind(this, 'company')} icon={
 							<div>
 								<div style={{background: colors.lightBlueA200, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', padding: '5px 0'}}>
 									<div style={{background: colors.lightBlueA100, width: 40, height: 40, borderRadius: 20, display: 'flex', justifyContent: 'center'}}>
@@ -452,25 +629,26 @@ class Register extends React.Component {
 					</div>
 				)
 			case 2:
-				return (
-					<div style={{width: 400}}>
-						<TextField
-							style={{width: '100%'}}
-							hintText="请输入您的用户名"
-							floatingLabelText="用户名"
-							errorText={registerInputError.username}
-							errorStyle={styles.errorStyle}
-							onChange={this._handleInputChange.bind(this, 'username')}
-						/><br />
-						<TextField
-							style={{width: '100%'}}
-							hintText="请输入您的姓名"
-							floatingLabelText="姓名"
-							errorText={registerInputError.realname}
-							errorStyle={styles.errorStyle}
-							onChange={this._handleInputChange.bind(this, 'realname')}
+				if (registerEntity.type == 'customer' || registerEntity.type == '') {
+					return (
+						<div style={{width: 400}}>
+							<TextField
+								style={{width: '100%'}}
+								hintText="请输入您的用户名"
+								floatingLabelText="用户名"
+								errorText={registerInputError.username}
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'username')}
+							/><br />
+							<TextField
+								style={{width: '100%'}}
+								hintText="请输入您的姓名"
+								floatingLabelText="姓名"
+								errorText={registerInputError.realname}
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'realname')}
 
-						/><br />
+							/><br />
 							<SelectField
 								style={{width: '100%'}}
 								floatingLabelText="地址"
@@ -488,8 +666,8 @@ class Register extends React.Component {
 								floatingLabelText="市"
 								errorText={registerInputError.di}
 								errorStyle={styles.errorStyle}
-							  value={this.state.selectedDi}
-							  onChange={this._handleAddressChange.bind(this, 'selectedDi')}
+								value={this.state.selectedDi}
+								onChange={this._handleAddressChange.bind(this, 'selectedDi')}
 							>
 								{this.state.di}
 							</SelectField>
@@ -498,21 +676,166 @@ class Register extends React.Component {
 								floatingLabelText="县"
 								errorText={registerInputError.xian}
 								errorStyle={styles.errorStyle}
-							  value={this.state.selectedXian}
-							  onChange={this._handleAddressChange.bind(this, 'selectedXian')}
+								value={this.state.selectedXian}
+								onChange={this._handleAddressChange.bind(this, 'selectedXian')}
 							>
 								{this.state.xian}
 							</SelectField>
-						<TextField
-							style={{width: '100%', marginTop: -10}}
-							hintText="请输入您的详细地址"
-							floatingLabelText="详细地址"
-							errorText={registerInputError.detailAddress}
-							errorStyle={styles.errorStyle}
-							onChange={this._handleInputChange.bind(this, 'detailAddress')}
-						/>
-					</div>
-				)
+							<TextField
+								style={{width: '100%', marginTop: -10}}
+								hintText="请输入您的详细地址"
+								floatingLabelText="详细地址"
+								errorText={registerInputError.detailAddress}
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'detailAddress')}
+							/>
+						</div>
+					)
+				}else {
+					return (
+						<div style={{width: 400}}>
+							<TextField
+								style={{width: '100%'}}
+								hintText="请输入您的企业名称"
+								floatingLabelText="企业名称"
+								errorText={registerInputError.companyName}
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'companyName')}
+							/><br/>
+							<TextField
+								style={{width: '100%'}}
+								hintText="请输入您的营业执照注册号"
+								floatingLabelText="营业执照注册号"
+								errorText={registerInputError.licenceCode}
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'licenceCode')}
+							/><br/>
+							<SelectField
+								style={{width: '100%'}}
+								floatingLabelText="地址"
+								floatingLabelFixed={true}
+								hintText="省"
+								value={this.state.selectedSheng}
+								errorText={registerInputError.sheng}
+								errorStyle={styles.errorStyle}
+								onChange={this._handleAddressChange.bind(this, 'selectedSheng')}
+							>
+								{this.state.sheng}
+							</SelectField>
+							<SelectField
+								style={{width: '100%'}}
+								floatingLabelText="市"
+								errorText={registerInputError.di}
+								errorStyle={styles.errorStyle}
+								value={this.state.selectedDi}
+								onChange={this._handleAddressChange.bind(this, 'selectedDi')}
+							>
+								{this.state.di}
+							</SelectField>
+							<SelectField
+								style={{width: '100%'}}
+								floatingLabelText="县"
+								errorText={registerInputError.xian}
+								errorStyle={styles.errorStyle}
+								value={this.state.selectedXian}
+								onChange={this._handleAddressChange.bind(this, 'selectedXian')}
+							>
+								{this.state.xian}
+							</SelectField>
+							<TextField
+								style={{width: '100%', marginTop: -10}}
+								hintText="请输入您的详细地址"
+								floatingLabelText="详细地址"
+								errorText={registerInputError.detailAddress}
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'detailAddress')}
+							/>
+							<TextField
+								style={{width: '100%'}}
+								hintText="请输入您的营业年限"
+								floatingLabelText="营业年限"
+								errorText={registerInputError.businessTime}
+								type="number"
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'businessTime')}
+							/><br/>
+							<TextField
+								style={{width: '100%'}}
+								hintText="请输入您的固定电话"
+								floatingLabelText="固定电话"
+								errorText={registerInputError.fixedPhone}
+								type="number"
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'fixedPhone')}
+							/><br/>
+							<TextField
+								style={{width: '100%'}}
+								hintText="请输入您的经营范围"
+								floatingLabelText="经营范围"
+								errorText={registerInputError.businessArea}
+								errorStyle={styles.errorStyle}
+								onChange={this._handleInputChange.bind(this, 'businessArea')}
+							/><br/>
+
+							<div style={{marginTop: 20, width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}} >
+								是否三证合一
+								<RadioButtonGroup name="triad" valueSelected={this.state.triad} onChange={this._handleTriadChange.bind(this)}
+								                  style={{marginLeft: 20, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center'}}>
+									<RadioButton
+										value="yes"
+										label="是"
+									/>
+									<RadioButton
+										value="no"
+										label="否"
+									/>
+								</RadioButtonGroup>
+							</div>
+							<div style={{marginTop: 20, width: '100%'}}>
+								{this.state.triad == 'yes' ? '工商营业执照、组织机构代码、税务登记证扫描件:' : '工商营业执照扫描件:'}
+								<div style={{marginTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
+									<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center'}}>
+										<img style={{width: 99, height: 79}} src={this.state.image1 || require('../../images/front/register/register_upload_placeholder.png')} alt=""/>
+										<RaisedButton secondary={true} label="单击上传" style={{marginTop: 5}} onClick={this._handleUploadClick.bind(this, this._file1)}/>
+										<input accept="image/gif, image/jpeg, image/png, image/gif, application/x-bmp" type="file" style={{display: 'none'}} ref={(view) => {this._file1 = view}} onChange={this._handleUploadChange.bind(this, this._file1, 'image1')}/>
+									</div>
+									<div style={{marginLeft: 20, color: colors.grey500}}>
+										<p>证件要求:</p>
+										<p>必须为清晰、完整的彩色原件扫描件或数码照,仅支持jpg.bmp.png.gif的图片格式,图片大小不超过3M。必须在有效期内且年检章齐全(当年成立的公司可无年检章)必须为重过大陆工商局颁发</p>
+									</div>
+								</div>
+							</div>
+							<div style={{marginTop: 20, width: '100%', display: this.state.triad == 'yes' ? 'none' : 'block'}}>
+								组织机构代码扫描件:
+								<div style={{marginTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
+									<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center'}}>
+										<img style={{width: 99, height: 79}} src={this.state.image2 || require('../../images/front/register/register_upload_placeholder.png')} alt=""/>
+										<RaisedButton secondary={true} label="单击上传" style={{marginTop: 5}} onClick={this._handleUploadClick.bind(this, this._file2)}/>
+										<input type="file" style={{display: 'none'}} ref={(view) => {this._file2 = view}} onChange={this._handleUploadChange.bind(this, this._file2, 'image2')}/>
+									</div>
+									<div style={{marginLeft: 20, color: colors.grey500}}>
+										<p>证件要求:</p>
+										<p>必须为清晰、完整的彩色原件扫描件或数码照,仅支持jpg.bmp.png.gif的图片格式,图片大小不超过3M。必须在有效期内且年检章齐全(当年成立的公司可无年检章)必须为重过大陆工商局颁发</p>
+									</div>
+								</div>
+							</div>
+							<div style={{marginTop: 20, width: '100%', display: this.state.triad == 'yes' ? 'none' : 'block'}}>
+								税务登记证扫描件:
+								<div style={{marginTop: 10, display: 'flex', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
+									<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center'}}>
+										<img style={{width: 99, height: 79}} src={this.state.image3 || require('../../images/front/register/register_upload_placeholder.png')} alt=""/>
+										<RaisedButton secondary={true} label="单击上传" style={{marginTop: 5}} onClick={this._handleUploadClick.bind(this, this._file3)}/>
+										<input type="file" style={{display: 'none'}} ref={(view) => {this._file3 = view}} onChange={this._handleUploadChange.bind(this, this._file3, 'image3')}/>
+									</div>
+									<div style={{marginLeft: 20, color: colors.grey500}}>
+										<p>证件要求:</p>
+										<p>必须为清晰、完整的彩色原件扫描件或数码照,仅支持jpg.bmp.png.gif的图片格式,图片大小不超过3M。必须在有效期内且年检章齐全(当年成立的公司可无年检章)必须为重过大陆工商局颁发</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					)
+				}
 			case 3:
 				return (
 					<div style={{

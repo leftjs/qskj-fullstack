@@ -3,8 +3,10 @@
  */
 import * as user from './user'
 import * as shopcar from './shopcar'
+import * as common from './common'
 
 export default {
 	...user,
-	...shopcar
+	...shopcar,
+	...common
 }

@@ -50,18 +50,43 @@ export const getCityList = ({sheng, di, level}) => {
 	})
 }
 
-export const registerPersonal = ({mail, salt, code, username, password, address, realname}) => {
+export const registerPersonal = ({mail, salt, code, username, password, address, realname,type}) => {
 	return dispatch => dispatch({
 		type: types.REGISTER_PERSONAL,
 		payload: new Promise((resolve, reject) => {
-			req.post('/users/register/personal', {
+			req.post('/users/register', {
 				mail,
 				salt,
 				code,
 				username,
 				password,
 				address,
-				realname
+				realname,
+				type
+			}).then((res) => {
+				resolve(res)
+			}).catch((err) => {
+				reject(err)
+			})
+		})
+	})
+}
+
+export const registerCompany = ({mail, salt, code, companyName, password, detailAddress, businessTime, fixedPhone, businessArea,type}) => {
+	return dispatch => dispatch({
+		type: types.REGISTER_COMPANY,
+		payload: new Promise((resolve, reject) => {
+			req.post('/users/register', {
+				mail,
+				salt,
+				code,
+				companyName,
+				password,
+				detailAddress,
+				businessTime,
+				fixedPhone,
+				businessArea,
+				type
 			}).then((res) => {
 				resolve(res)
 			}).catch((err) => {
