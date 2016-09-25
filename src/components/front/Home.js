@@ -5,7 +5,7 @@ import React from 'react'
 import actions from '../../actions/front'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {FlatButton,RaisedButton} from 'material-ui'
+import {FlatButton,RaisedButton, IconButton} from 'material-ui'
 import {browserHistory} from 'react-router'
 import * as colors from 'material-ui/styles/colors'
 
@@ -46,6 +46,13 @@ const styles = {
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: '100%'
+	},
+	arrow: {
+		width: '20%',
+		display: 'flex',
+		flexDirection:'column',
+		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	leftContainer: {
 		padding: '1em',
@@ -105,9 +112,216 @@ class Home extends React.Component{
 		this.props.actions.login({username: 'as'})
 	}
 
+	state = {
+		page: 1
+	}
+
+	_handlePageDecrease = () => {
+		let page = this.state.page
+		--page
+		this.setState({
+			page: page < 1 ? 3 : page
+		})
+	}
+
+	_handlePageIncrease = () => {
+		let page = this.state.page
+		++page
+		this.setState({
+			page: page > 3 ? 1 : page
+		})
+	}
 
 	_handleBuyClick = () => {
 		browserHistory.push('/buy')
+	}
+
+	_renderHomeContent = () => {
+
+		let page = this.state.page
+		switch (page) {
+			case 1:
+				return (
+					<div style={styles.body}>
+						<div style={styles.arrow}>
+							<IconButton
+								onTouchTap={this._handlePageDecrease.bind(this)}
+								style={{
+									width: 115,
+									height: 115,
+									padding: 29
+								}}
+								iconStyle={{
+									width: 57,
+									height: 57
+								}}>
+								<img src={require('../../images/front/home/home_arrow_left.png')} alt=""/>
+							</IconButton>
+						</div>
+
+						<div style={{
+							display: 'flex',
+							flexDirection: 'column',
+							justifyContent: 'center',
+							alignItems: 'center',
+							width: '60%'
+						}}>
+							<p style={{
+								marginTop: '1em',
+								fontSize: '6rem',
+								color: colors.darkBlack
+							}}>湛泸</p>
+							<p style={{
+								fontSize: '4rem',
+								color: colors.lightBlack
+							}}>给您一个全新的开始</p>
+							<div
+								style={{
+								marginTop: '1em',
+								display: 'flex',
+								flexDirection: 'row',
+								justifyContent: 'space-between',
+								alignItems: 'center'
+							}}>
+								<img src={require('../../images/front/home/home_product_4.png')} style={{
+									width: '40%'
+								}} alt=""/>
+								<img src={require('../../images/front/home/home_product_5.png')} style={{
+									width: '40%'
+								}} alt=""/>
+							</div>
+						</div>
+						<div style={styles.arrow}>
+							<IconButton
+								onTouchTap={this._handlePageIncrease.bind(this)}
+								style={{
+									width: 115,
+									height: 115,
+									padding: 29
+								}}
+								iconStyle={{
+									width: 57,
+									height: 57
+								}}>
+								<img src={require('../../images/front/home/home_arrow_right.png')} alt=""/>
+							</IconButton>
+						</div>
+					</div>
+				)
+				break
+			case 2:
+				return (
+					<div style={styles.body}>
+						<div style={styles.arrow}>
+							<IconButton
+								onTouchTap={this._handlePageDecrease.bind(this)}
+								style={{
+									width: 115,
+									height: 115,
+									padding: 29
+								}}
+								iconStyle={{
+									width: 57,
+									height: 57
+								}}>
+								<img src={require('../../images/front/home/home_arrow_left.png')} alt=""/>
+							</IconButton>
+						</div>
+
+						<div style={{
+							display: 'flex',
+							flexDirection: 'column',
+							justifyContent: 'center',
+							alignItems: 'center',
+							width: '60%'
+						}}>
+							<p style={{
+								marginTop: '1em',
+								fontSize: '6rem',
+								color: colors.darkBlack
+							}}>湛泸</p>
+							<p style={{
+								fontSize: '4rem',
+								color: colors.lightBlack
+							}}>匠心独运,大道至简</p>
+							<img style={{
+								zIndex: '-100',
+								width: '100%',
+								marginTop: '20%',
+								transform: 'scale(1.67)'
+						}} src={require('../../images/front/home/home_product_6.png')} alt=""/>
+						</div>
+
+						<div style={styles.arrow}>
+							<IconButton
+								onTouchTap={this._handlePageIncrease.bind(this)}
+								style={{
+									width: 115,
+									height: 115,
+									padding: 29
+								}}
+								iconStyle={{
+									width: 57,
+									height: 57
+								}}>
+								<img src={require('../../images/front/home/home_arrow_right.png')} alt=""/>
+							</IconButton>
+						</div>
+					</div>
+
+				)
+				break
+			case 3:
+				return (
+					<div style={styles.body}>
+						<div style={styles.arrow}>
+							<IconButton
+								onTouchTap={this._handlePageDecrease.bind(this)}
+								style={{
+									width: 115,
+									height: 115,
+									padding: 29
+								}}
+								iconStyle={{
+									width: 57,
+									height: 57
+								}}>
+								<img src={require('../../images/front/home/home_arrow_left.png')} alt=""/>
+							</IconButton>
+						</div>
+						<div style={styles.leftContainer}>
+							<p style={styles.title}><span style={styles.titleBorder}>湛</span>泸</p>
+							<p style={styles.subtitle}>匠心独运,大道至简</p>
+							<p style={styles.desc}>湛泸启动系统适用于GY6-125款发动机,让您感受"其疾如风,其徐如林,不动如山,动若雷霆"的摩托车驾车体验。彰显自我从起步开始</p>
+							<p style={styles.price}><span style={styles.priceNumber}>260</span>元起</p>
+						</div>
+						<div style={styles.rightContainer}>
+							<img src={require('../../images/front/home/home_product_1.png')} style={[styles.productImg, styles.productImg1]} alt=""/>
+							<img src={require('../../images/front/home/home_product_2.png')} style={[styles.productImg, styles.productImg2]} alt=""/>
+							<img src={require('../../images/front/home/home_product_3.png')} style={[styles.productImg, styles.productImg3]} alt=""/>
+						</div>
+						<div style={styles.arrow}>
+							<IconButton
+								onTouchTap={this._handlePageIncrease.bind(this)}
+								style={{
+									width: 115,
+									height: 115,
+									padding: 29
+								}}
+								iconStyle={{
+									width: 57,
+									height: 57
+								}}>
+								<img src={require('../../images/front/home/home_arrow_right.png')} alt=""/>
+							</IconButton>
+						</div>
+					</div>
+				)
+				break
+			default:
+				break
+
+		}
 	}
 
 
@@ -136,19 +350,9 @@ class Home extends React.Component{
 						/>
 					</div>
 				</div>
-				<div style={styles.body}>
-					<div style={styles.leftContainer}>
-						<p style={styles.title}><span style={styles.titleBorder}>湛</span>泸</p>
-						<p style={styles.subtitle}>匠心独运,大道至简</p>
-						<p style={styles.desc}>湛泸启动系统适用于GY6-125款发动机,让您感受"其疾如风,其徐如林,不动如山,动若雷霆"的摩托车驾车体验。彰显自我从起步开始</p>
-						<p style={styles.price}><span style={styles.priceNumber}>260</span>元起</p>
-					</div>
-					<div style={styles.rightContainer}>
-						<img src={require('../../images/front/home/home_product_1.png')} style={[styles.productImg, styles.productImg1]} alt=""/>
-						<img src={require('../../images/front/home/home_product_2.png')} style={[styles.productImg, styles.productImg2]} alt=""/>
-						<img src={require('../../images/front/home/home_product_3.png')} style={[styles.productImg, styles.productImg3]} alt=""/>
-					</div>
-				</div>
+				{
+					this._renderHomeContent()
+				}
 			</div>
 
 		)

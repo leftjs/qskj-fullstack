@@ -811,7 +811,7 @@ class Register extends React.Component {
 									<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center'}}>
 										<img style={{width: 99, height: 79}} src={this.state.image2 || require('../../images/front/register/register_upload_placeholder.png')} alt=""/>
 										<RaisedButton secondary={true} label="单击上传" style={{marginTop: 5}} onClick={this._handleUploadClick.bind(this, this._file2)}/>
-										<input type="file" style={{display: 'none'}} ref={(view) => {this._file2 = view}} onChange={this._handleUploadChange.bind(this, this._file2, 'image2')}/>
+										<input accept="image/gif, image/jpeg, image/png, image/gif, application/x-bmp" type="file" style={{display: 'none'}} ref={(view) => {this._file2 = view}} onChange={this._handleUploadChange.bind(this, this._file2, 'image2')}/>
 									</div>
 									<div style={{marginLeft: 20, color: colors.grey500}}>
 										<p>证件要求:</p>
@@ -825,7 +825,7 @@ class Register extends React.Component {
 									<div style={{display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center'}}>
 										<img style={{width: 99, height: 79}} src={this.state.image3 || require('../../images/front/register/register_upload_placeholder.png')} alt=""/>
 										<RaisedButton secondary={true} label="单击上传" style={{marginTop: 5}} onClick={this._handleUploadClick.bind(this, this._file3)}/>
-										<input type="file" style={{display: 'none'}} ref={(view) => {this._file3 = view}} onChange={this._handleUploadChange.bind(this, this._file3, 'image3')}/>
+										<input accept="image/gif, image/jpeg, image/png, image/gif, application/x-bmp" type="file" style={{display: 'none'}} ref={(view) => {this._file3 = view}} onChange={this._handleUploadChange.bind(this, this._file3, 'image3')}/>
 									</div>
 									<div style={{marginLeft: 20, color: colors.grey500}}>
 										<p>证件要求:</p>
