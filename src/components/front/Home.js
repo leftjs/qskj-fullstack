@@ -248,7 +248,7 @@ class Home extends React.Component{
 								zIndex: '-100',
 								width: '100%',
 								marginTop: '20%',
-								transform: 'scale(1.67)'
+								transform: 'scale(1.6)'
 						}} src={require('../../images/front/home/home_product_6.png')} alt=""/>
 						</div>
 
