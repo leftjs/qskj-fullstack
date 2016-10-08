@@ -29,16 +29,22 @@ function filterStatus(res) {
 
 
 
-export function get(url,params) {
+export function get(url,params,headers) {
 	url = urlPrefix + url;
 	if (params) {
 		url += `?${qs.stringify(params)}`;
 	}
 
+
 	console.info(`GET: `, url);
 	console.info(`Params: `, params)
 
-	return fetch(url)
+	return fetch(url, {
+		method: 'GET',
+		headers: {
+			...headers
+		},
+	})
 		.then(filterStatus)
 		.then(filterJSON);
 }

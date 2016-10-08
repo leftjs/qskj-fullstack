@@ -22,34 +22,3 @@ export const uploadSingle = (data) => {
 	})
 }
 
-/**
- * 个人信息注册
- * @param mail
- * @param salt
- * @param code
- * @param username
- * @param password
- * @param address
- * @param realname
- * @returns {function(*): *}
- */
-export const registerPersonal = ({mail, salt, code, username, password, address, realname}) => {
-	return dispatch => dispatch({
-		type: types.REGISTER_PERSONAL,
-		payload: new Promise((resolve, reject) => {
-			req.post('/users/register/personal', {
-				mail,
-				salt,
-				code,
-				username,
-				password,
-				address,
-				realname
-			}).then((res) => {
-				resolve(res)
-			}).catch((err) => {
-				reject(err)
-			})
-		})
-	})
-}

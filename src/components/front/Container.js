@@ -4,12 +4,16 @@
 
 import React from 'react'
 import Radium, {StyleRoot} from 'radium'
+import actions from '../../actions/front'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import _ from 'lodash'
 import {FlatButton} from 'material-ui'
 import * as colors from 'material-ui/styles/colors'
 import logo from '../../images/front/logo.png'
-import SearchSvgIcon from 'material-ui/svg-icons/action/search'
-import ShoppingCarSvgIcon from 'material-ui/svg-icons/action/shopping-cart'
+import PersonSvgIcon from 'material-ui/svg-icons/social/person'
+import PersonAddSvgIcon from 'material-ui/svg-icons/social/person-add'
+import ClearSvgIcon from 'material-ui/svg-icons/content/clear'
 import { browserHistory } from 'react-router'
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
@@ -53,6 +57,31 @@ const styles = {
 
 
 class Container extends React.Component {
+
+
+	componentWillMount() {
+		console.log('only once')
+		if (this.props.user.token || localStorage.getItem('token') && !this.props.user.info) {
+			this.props.actions.loginWithToken(this.props.user.token || localStorage.getItem('token'))
+		}
+	}
+	renderProfiles = () => {
+		if (!this.props.user.info) {
+			return (
+				<div>
+					<FlatButton label="注册" onTouchTap={() => {browserHistory.push('register')}} icon={<PersonAddSvgIcon color={styles.labelActive.color}/>}/>
+					<FlatButton label="登录" onTouchTap={() => {browserHistory.push('login')}} icon={<PersonSvgIcon color={styles.labelActive.color}/>}/>
+				</div>
+			)
+		}else {
+			return (
+				<div>
+					<FlatButton label="注销" onTouchTap={() => {this.props.actions.logout()}} icon={<ClearSvgIcon color={styles.labelActive.color}/>}/>
+					<FlatButton label="个人中心" onTouchTap={() => {browserHistory.push('center')}} icon={<PersonSvgIcon color={styles.labelActive.color}/>}/>
+				</div>
+			)
+		}
+	}
 	render() {
 		return (
 			<div >
@@ -65,9 +94,8 @@ class Container extends React.Component {
 						<FlatButton label="黑科技NEWS" labelStyle={styles.labelNoActive}/>
 					</div>
 					<div>
-						<FlatButton icon={<SearchSvgIcon color={styles.labelActive.color} />}/>
-						<FlatButton icon={<ShoppingCarSvgIcon color={styles.labelActive.color}/>}/>
-					</div>
+						{this.renderProfiles()}
+						</div>
 				</div>
 				{this.props.children}
 			</div>
@@ -75,4 +103,19 @@ class Container extends React.Component {
 	}
 }
 
-export default Radium(Container)
+
+function mapStateToProps(state) {
+	/* Populated by react-webpack-redux:reducer */
+	const props = {
+		user: state.user
+	};
+	return props;
+}
+function mapDispatchToProps(dispatch) {
+	/* Populated by react-webpack-redux:action */
+	return {
+		actions: {...bindActionCreators(actions, dispatch)}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Radium(Container))

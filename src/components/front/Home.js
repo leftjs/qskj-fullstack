@@ -109,7 +109,6 @@ const styles = {
 class Home extends React.Component{
 
 	componentWillMount(){
-		this.props.actions.login({username: 'as'})
 	}
 
 	state = {

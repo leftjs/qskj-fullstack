@@ -38,7 +38,7 @@ router.post('/send/validation/mail', (req,res,next) => {
 	let {mail, salt} = req.body
 	console.log(mail, salt)
 	let md5Str = md5Utils.md5(`${mail}${salt}`)
-	mailUtils.sendMail(mail, '验证码邮件,请勿回复', `<h3>您的验证码为:</h3><p style="font-size: 20px; color: red;">${md5Str.substring(md5Str.length - 4)}</p>`, (err, info) => {
+	mailUtils.sendMail(mail, '青霜科技注册绑定邮箱验证码邮件,请勿回复', `<h1>亲爱的客户，您好！</h1><br><h3>您的绑定验证码是:</h3><p style="font-size: 20px; color: red;">${md5Str.substring(md5Str.length - 4)}</p><br><p>本邮件由系统自动发送，请勿直接回复！</p><p>感谢您的访问，祝您使用愉快！</p><br><p>青霜科技</p><p><a href="http://www.greenicetech.cn">www.greenicetech.cn</a></p>`, (err, info) => {
 		if(err) {
 			return next(err)
 		}else {
@@ -153,13 +153,12 @@ router.get('/:id/validate', (req,res,next) => {
 
 router.post('/login', (req,res,next) => {
 	const body = req.body
-	const username = body.username
+	const email = body.email
 	const password = body.password
-	const role = body.role
 
-	user.findOne({username, password,role},(err, doc) => {
+	user.findOne({email, password},(err, doc) => {
 		if (err) return next(customError(400, '数据库出错'))
-		if (!doc) return next(customError(400,'用户名或密码出错'))
+		if (!doc) return next(customError(400,'邮箱或密码出错'))
 		authUtils.generateToken(doc._id, (err,token) => {
 			if (err) return next(customError(400, "生成token失败"))
 			return res.json(token)

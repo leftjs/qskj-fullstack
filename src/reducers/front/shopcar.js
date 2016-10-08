@@ -4,7 +4,6 @@
 import * as types from '../../actions/const'
 
 export const shopcar = (state = [], action) => {
-	console.log(action)
 	return [
 		...state
 	]

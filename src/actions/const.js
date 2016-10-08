@@ -63,3 +63,7 @@ export const SEND_VALIDATION_MAIL = 'SEND_VALIDATION_MAIL'
 export const REGISTER_PERSONAL = 'REGISTER_PERSONAL'
 // 企业用户注册
 export const REGISTER_COMPANY = 'REGISTER_COMPANY'
+// 根据token获取用户信息
+export const LOGIN_WITH_TOKEN = 'LOGIN_WITH_TOKEN'
+// 用户注销
+export const LOGOUT_FRONT = 'LOGOUT_FRONT'

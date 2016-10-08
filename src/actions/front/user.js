@@ -17,6 +17,25 @@ export const login = (body) => {
 	})
 }
 
+export const logout = () => {
+	return dispatch => dispatch({
+		type: types.LOGOUT_FRONT
+	})
+}
+
+export const loginWithToken = (token) => {
+	return dispatch => dispatch({
+		type: types.LOGIN_WITH_TOKEN,
+		payload: new Promise((resolve, reject) => {
+			req.get('/users/login/with/token', {}, {'x-token': token}).then((res) => {
+				resolve(res)
+			}).catch((err) => {
+				reject(err)
+			})
+		})
+	})
+}
+
 export const sendValidationMail = ({mail, salt}) => {
 	return dispatch => dispatch({
 		type: types.SEND_VALIDATION_MAIL,
