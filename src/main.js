@@ -1,5 +1,4 @@
 import 'core-js/fn/object/assign';
-require('normalize.css/normalize.css');
 // require('object-fit-images')
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -11,6 +10,7 @@ import Main from './components/front/Main'
 import Home from './components/front/Home'
 import Buy from './components/front/Buy'
 import Login from './components/front/Login'
+import Center from './components/front/Center'
 import DevTools from './stores/DevTools'
 import ShopCar from './components/front/ShopCar'
 import Register from './components/front/Register'
@@ -61,6 +61,7 @@ ReactDOM.render(
 						<Route path="buy" component={Buy} />
 						<Route path="register" component={Register}/>
 						<Route path="login" component={Login}/>
+						<Route path="center" component={Center}/>
 					</Route>
 				</Router>
 				{/*{ process.env.NODE_ENV !== 'production' ? <DevTools/> : null}*/}

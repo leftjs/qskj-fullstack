@@ -22,7 +22,8 @@ const styles = {
 		alignItems: 'center'
 	},
 	box: {
-		width: '80%'
+		width: '80%',
+		minWidth: '800px'
 	},
 	addressContainer: {
 		display: 'flex',

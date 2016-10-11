@@ -9,31 +9,6 @@ import {validateBodyNull} from '../utils'
 import _ from 'lodash'
 
 
-/**
- * 分页获取商品
- */
-router.get('/list', (req,res,next) => {
-	let page = parseInt(req.query['page'])
-	let size = parseInt(req.query['size'])
-	if (page < 1) page = 1
-	console.log(page, size)
-	product.count({}, (err, count) => {
-		if(err) return next(customError(400, err.message))
-		product.find({}).skip(parseInt((page - 1 ) * size)).limit(parseInt(size)).exec((err, list) => {
-			if(err) return next(customError(400, err.message))
-			res.json({
-				data: list,
-				totalDataSize: count,
-				sizePerPage: parseInt(size),
-				currentPage: parseInt(page)
-			})
-		})
-	})
-})
-
-router.post('/add', (req,res,next) => {
-
-})
 
 
 

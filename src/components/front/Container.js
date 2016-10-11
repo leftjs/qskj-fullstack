@@ -18,16 +18,6 @@ import { browserHistory } from 'react-router'
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 import Alert from 'react-s-alert'
-const menus = [{
-	name: 'starter',
-	text: '启动系统'
-}, {
-	name: 'forum',
-	text: '官方论坛'
-}, {
-	name: 'news',
-	text: '黑科技NEWS'
-}]
 
 const styles = {
 	nav: {
@@ -89,7 +79,7 @@ class Container extends React.Component {
 				<div style={[styles.verticalCenter, styles.nav]}>
 					<div style={styles.verticalCenter}>
 						<img src={logo} alt="logo" style={styles.logo}/>
-						<FlatButton label="启动系统" labelStyle={styles.labelActive} />
+						<FlatButton label="启动系统" labelStyle={styles.labelActive} onTouchTap={() => {browserHistory.push('/')}}/>
 						<FlatButton label="官方论坛" labelStyle={styles.labelNoActive}/>
 						<FlatButton label="黑科技NEWS" labelStyle={styles.labelNoActive}/>
 					</div>

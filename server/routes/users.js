@@ -186,5 +186,80 @@ router.get('/login/with/token', (req,res,next) => {
 	})
 })
 
+/**
+ * 添加/修改收货地址
+ */
+router.post('/upsert/receive/address', (req, res, next) => {
+	let token = req.headers['x-token']
+	let body = req.body
+	authUtils.verifyToken(token, (err, decoded) => {
+		if(err){
+			if (err.name == "TokenExpiredError") {
+				return next(customError(401, 'token过期异常'))
+			} else {
+				return next(customError(401, 'token不正确'))
+			}
+		}
+
+		user.findOne({_id: decoded.id}, (err,doc) => {
+			if(err) return next(customError(400, '数据库出错'))
+			if(!doc) return next(customError(400, '该用户信息不存在'))
+			let receiveAddress = doc.receiveAddress || []
+
+			if (!!body._id) {
+				receiveAddress = _.map(receiveAddress, (item) => {
+					console.log(item._id.toString(), body._id.toString())
+					if (item._id.toString() === body._id.toString()) {
+						console.log(body)
+						return body
+					}else {
+						return item
+					}
+				})
+			}else receiveAddress.push(body)
+			user.update({_id: decoded.id}, {$set: {receiveAddress}}, (err, result) => {
+				if(err) return next(customError(400, '数据库出错'))
+				res.json(result)
+			})
+		})
+	})
+})
+
+/**
+ * 删除指定收货地址
+ */
+router.delete('/:id/receive/address', (req,res,next) => {
+	let token = req.headers['x-token']
+	let addressId = req.params['id']
+	authUtils.verifyToken(token, (err, decoded) => {
+		if(err){
+			if (err.name == "TokenExpiredError") {
+				return next(customError(401, 'token过期异常'))
+			} else {
+				return next(customError(401, 'token不正确'))
+			}
+		}
+
+		user.findOne({_id: decoded.id}, (err, doc) => {
+			if(err) return next(customError(400, '数据库出错'))
+			if(!doc) return next(customError(400, '该用户信息不存在'))
+
+			let receiveAddress = doc.receiveAddress || []
+			receiveAddress = _.compact(_.map(receiveAddress, (item) => {
+				if (item._id.toString() === addressId.toString()) {
+					return null
+				}else return item
+			}))
+
+			user.update({_id: decoded.id}, {$set: {receiveAddress}}, (err, result) => {
+				if(err) return next(customError(400, '数据库出错'))
+				res.json(result)
+			})
+		})
+	})
+})
+
+
+
 
 module.exports = router;

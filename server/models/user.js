@@ -33,7 +33,21 @@ const userSchema = Schema({
 		default: false
 	}, // 是否认证
 	realname: String, // 真实姓名
-	address: String, //
+	address: String, // 地址
+	receiveAddress: [{
+		name: {
+			type: String,
+			required: true
+		},
+		phone: {
+			type: String,
+			required: true
+		},
+		address: {
+			type: String,
+			required: true
+		}
+	}], // 个人收货地址
 	role: {
 		type: String,
 		enum: [
