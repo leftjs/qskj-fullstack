@@ -18,7 +18,7 @@ export const user = (state = {}, action) => {
 					...action.payload
 				}
 			}
-		case `${types.LOGOUT_FRONT}`:
+		case `${types.LOGOUT_FRONT}`:{
 			let inlineState = {...state}
 			delete inlineState.info
 			delete inlineState.token
@@ -26,10 +26,10 @@ export const user = (state = {}, action) => {
 			return {
 				...inlineState
 			}
+		}
+
 		default:
-			return {
-				...state,
-			}
+			return state
 	}
 
 }

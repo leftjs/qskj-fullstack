@@ -4,9 +4,11 @@
 import * as user from './user'
 import * as shopcar from './shopcar'
 import * as common from './common'
+import * as product from './product'
 
 export default {
 	...user,
 	...shopcar,
-	...common
+	...product,
+	...common,
 }

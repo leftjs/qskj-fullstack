@@ -91,7 +91,7 @@ export const registerPersonal = ({mail, salt, code, username, password, address,
 	})
 }
 
-export const registerCompany = ({mail, salt, code, companyName, password, detailAddress, businessTime, fixedPhone, businessArea,type}) => {
+export const registerCompany = ({mail, salt, code, companyName, password, address, businessTime, fixedPhone, businessArea,type}) => {
 	return dispatch => dispatch({
 		type: types.REGISTER_COMPANY,
 		payload: new Promise((resolve, reject) => {
@@ -101,7 +101,7 @@ export const registerCompany = ({mail, salt, code, companyName, password, detail
 				code,
 				companyName,
 				password,
-				detailAddress,
+				address,
 				businessTime,
 				fixedPhone,
 				businessArea,
@@ -114,3 +114,31 @@ export const registerCompany = ({mail, salt, code, companyName, password, detail
 		})
 	})
 }
+
+export const addOrUpdateReceiveAddress = ({name, phone, address, token}) => {
+	return dispatch => dispatch({
+		type: types.ADD_OR_UPDATE_RECEIVE_ADDRESS,
+		payload: new Promise((resolve, reject) => {
+			req.post('/users/upsert/receive/address', {name, phone, address}, {'x-token': token}).then((res) => {
+				resolve(res)
+			}).catch((err) => {
+				reject(err)
+			})
+		})
+	})
+}
+
+
+export const deleteReceiveAddress = ({id, token}) => {
+	return dispatch => dispatch({
+		type: types.DELETE_RECEIVE_ADDRESS,
+		payload: new Promise((resolve, reject) => {
+			req.remove(`/users/${id}/receive/address`,{}, {'x-token': token}).then((res) => {
+				resolve(res)
+			}).catch((err) => {
+				reject(err)
+			})
+		})
+	})
+}
+

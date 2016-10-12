@@ -54,6 +54,7 @@ class ShopCar extends React.Component {
 										checkedIcon={<CheckCircle />}
 										uncheckedIcon={<RadioBtnUnchecked color={colors.red50}/>}
 										style={styles.checkbox}
+
 									/>
 									<Avatar size={60}  src={require('../../../images/img/user2-160x160.jpg')}/>
 									<span style={{
@@ -71,7 +72,7 @@ class ShopCar extends React.Component {
 								<IconButton>
 									<Add color={colors.grey500}/>
 								</IconButton>
-								<TextField style={{width: '40%'}} inputStyle={{textAlign: 'center'}}/>
+								<TextField name="count" style={{width: '40%'}} inputStyle={{textAlign: 'center'}}/>
 								<IconButton>
 									<Remove color={colors.grey500}/>
 								</IconButton>
@@ -142,7 +143,6 @@ class ShopCar extends React.Component {
 		)
 	}
 }
-
 
 export default Radium(ShopCar)
 

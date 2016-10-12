@@ -69,6 +69,7 @@ router.post('/register', (req,res,next) => {
 		image3,
 		type
 	} = req.body
+	console.log(req.body)
 	let md5Str = md5Utils.md5(`${mail}${salt}`)
 	if (md5Str.substring(md5Str.length - 4) != code) {
 		return next(customError(400, '验证码错误,请返回检查'))

@@ -6,15 +6,9 @@ var Schema = mongoose.Schema
 const userSchema = Schema({
 	username: {
 		type: String,
-		index: {
-			unique: true
-		}
 	}, // 个人名称
 	companyName: {
 		type: String,
-		index: {
-			unique: true
-		}
 	}, // 公司名称,
 	licenceCode: String, // 营业执照编号
 	businessTime: Number, // 营业年限,

@@ -49,6 +49,7 @@ const styles = {
 class Container extends React.Component {
 
 
+	// 访问网址时候登录一下，可以使用本地保存的token来进行登录
 	componentWillMount() {
 		console.log('only once')
 		if (this.props.user.token || localStorage.getItem('token') && !this.props.user.info) {

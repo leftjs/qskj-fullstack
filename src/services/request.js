@@ -48,7 +48,7 @@ export function get(url,params,headers) {
 		.then(filterStatus)
 		.then(filterJSON);
 }
-export function remove(url,params) {
+export function remove(url,params,headers) {
 	url = urlPrefix + url;
 	if (params) {
 		url += `?${qs.stringify(params)}`;
@@ -58,7 +58,10 @@ export function remove(url,params) {
 	console.info(`Params: `, params)
 
 	return fetch(url, {
-		method: 'DELETE'
+		method: 'DELETE',
+		headers: {
+			...headers
+		}
 	})
 		.then(filterStatus)
 		.then(filterJSON);

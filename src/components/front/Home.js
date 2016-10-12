@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import {FlatButton,RaisedButton, IconButton} from 'material-ui'
 import {browserHistory} from 'react-router'
 import * as colors from 'material-ui/styles/colors'
+import Alert from 'react-s-alert'
 
 
 import Radium from 'radium'
@@ -104,42 +105,57 @@ const styles = {
 	priceNumber: {
 		fontSize: '2.5rem',
 		color: colors.red400
+	},
+	stock: {
+		fontSize: '1.8rem',
+		color: colors.grey700
+	},
+	stockNumber: {
+		fontSize: '2.5rem',
+		color: colors.blue400
 	}
+
 }
 class Home extends React.Component{
 
-	componentWillMount(){
+	componentWillMount() {
+		this.props.actions.getProductsList()
 	}
 
+
 	state = {
-		page: 1
+		page: 1, // 页码
 	}
 
 	_handlePageDecrease = () => {
-		let page = this.state.page
+		let {page} = this.state
+		let {products} = this.props
 		--page
 		this.setState({
-			page: page < 1 ? 3 : page
+			page: page < 1 ? products.length + 2 : page
 		})
 	}
 
 	_handlePageIncrease = () => {
-		let page = this.state.page
+		let {page} = this.state
+		let {products} = this.props
+
 		++page
 		this.setState({
-			page: page > 3 ? 1 : page
+			page: page > products.length + 2 ? 1 : page
 		})
 	}
 
 	_handleBuyClick = () => {
+		this.props.actions.itemAdd(this.state.page <= 2 ? (this.props.products[0] && this.props.products[0]._id) : (this.props.products[this.state.page - 3] && this.props.products[this.state.page - 3]._id))
 		browserHistory.push('/buy')
 	}
 
 	_renderHomeContent = () => {
 
 		let page = this.state.page
-		switch (page) {
-			case 1:
+		switch (true) {
+			case (page === 1):
 				return (
 					<div style={styles.body}>
 						<div style={styles.arrow}>
@@ -208,7 +224,7 @@ class Home extends React.Component{
 					</div>
 				)
 				break
-			case 2:
+			case (page === 2):
 				return (
 					<div style={styles.body}>
 						<div style={styles.arrow}>
@@ -270,7 +286,9 @@ class Home extends React.Component{
 
 				)
 				break
-			case 3:
+			case (page >= 3):
+				let product = this.props.products[page - 3]
+
 				return (
 					<div style={styles.body}>
 						<div style={styles.arrow}>
@@ -289,10 +307,11 @@ class Home extends React.Component{
 							</IconButton>
 						</div>
 						<div style={styles.leftContainer}>
-							<p style={styles.title}><span style={styles.titleBorder}>湛</span>泸</p>
+							<p style={styles.title}><span style={styles.titleBorder}>{product.name.split('')[0]}</span>{product.name.trim().split('').splice(1,product.name.trim().split('').length).join('')}</p>
 							<p style={styles.subtitle}>匠心独运,大道至简</p>
-							<p style={styles.desc}>湛泸启动系统适用于GY6-125款发动机,让您感受"其疾如风,其徐如林,不动如山,动若雷霆"的摩托车驾车体验。彰显自我从起步开始</p>
-							<p style={styles.price}><span style={styles.priceNumber}>260</span>元起</p>
+							<p style={styles.desc}>{product.desc}</p>
+							<p style={styles.price}><span style={styles.priceNumber}>{product.price}</span>元起</p>
+							<p style={styles.stock}><span style={styles.stockNumber}>{product.stock}</span>套剩余</p>
 						</div>
 						<div style={styles.rightContainer}>
 							<img src={require('../../images/front/home/home_product_1.png')} style={[styles.productImg, styles.productImg1]} alt=""/>
@@ -363,6 +382,7 @@ class Home extends React.Component{
 function mapStateToProps(state) {
 	/* Populated by react-webpack-redux:reducer */
 	const props = {
+		products: [...state.product]
 	};
 	return props;
 }

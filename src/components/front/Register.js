@@ -245,6 +245,7 @@ class Register extends React.Component {
 					// 提交注册
 					const {mail, salt, code, companyName, password, detailAddress, businessTime, licenceCode, fixedPhone, businessArea ,type} = registerEntity
 					const address = `${selectedSheng}${selectedDi}${selectedXian}${detailAddress}`
+					console.log(address)
 					// 企业用户注册
 					registerCompany({
 						mail,
@@ -253,7 +254,6 @@ class Register extends React.Component {
 						companyName,
 						password,
 						address,
-						detailAddress,
 						businessTime,
 						fixedPhone,
 						licenceCode,
@@ -430,6 +430,15 @@ class Register extends React.Component {
 	 * @private
 	 */
 	_handleAddressChange = (key, event, index, value) => {
+
+
+		// 解决省份变动后的县显示的异常问题
+		if (key === 'selectedSheng'){
+			this.setState({
+				xian: []
+			})
+		}
+
 		this.setState({
 			[key]: value
 		})
