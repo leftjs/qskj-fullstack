@@ -204,7 +204,6 @@ class Buy extends React.Component {
 		})
 	}
 
-
 	/**
 	 * 获取省份列表
 	 * @private

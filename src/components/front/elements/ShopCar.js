@@ -10,6 +10,10 @@ import Add from 'material-ui/svg-icons/content/add-circle-outline'
 import Remove from 'material-ui/svg-icons/content/remove-circle-outline'
 import CheckCircle from 'material-ui/svg-icons/action/check-circle'
 import RadioBtnUnchecked from 'material-ui/svg-icons/toggle/radio-button-unchecked'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import actions from '../../../actions/front'
+import _ from 'lodash'
 
 const styles = {
 	container: {
@@ -25,7 +29,63 @@ const styles = {
 }
 
 class ShopCar extends React.Component {
+
+	state = {
+		checks: [], // 勾选的商品
+	}
+
+
+	_handleChangeItemStatus = (id) => {
+		console.log(id)
+		let add = true
+		let newChecks = _.compact(_.map(this.state.checks, (item) => {
+			if (id === item) {
+				add = false
+				return null
+			}else {
+				return item
+			}
+		}))
+
+		if(add) {
+			this.setState({
+				checks: [
+					...this.state.checks,
+					id
+				]
+			})
+		}else {
+			this.setState({
+				checks: newChecks
+			})
+		}
+	}
+
 	render() {
+		let {shopcar, products, remarks} = this.props
+		let myShopCar = _.compact(_.map(shopcar, (value, key) => {
+			let product = _.find(products, (item) => {
+				return item._id === key
+			})
+			if (!product) {
+				return null
+			}
+
+
+			return {
+				productId: key,
+				count: value,
+				image: product.image_url[0],
+				price: product.price,
+				total: product.price * value,
+				name: product.name,
+				remark: remarks[key],
+
+			}
+		}))
+
+
+
 		return (
 			<div style={styles.container}>
 				<Table selectable={false}>
@@ -41,49 +101,71 @@ class ShopCar extends React.Component {
 						</TableRow>
 					</TableHeader>
 					<TableBody displayRowCheckbox={false}>
-						<TableRow>
-							<TableRowColumn style={{width: '40%'}}>
-								<div style={{
-								display: 'flex',
-								flexDirection: 'row',
-								justifyContent: 'flex-start',
-								alignItems: 'center',
-								padding: '10px 0'
-							}}>
-									<Checkbox
-										checkedIcon={<CheckCircle />}
-										uncheckedIcon={<RadioBtnUnchecked color={colors.red50}/>}
-										style={styles.checkbox}
+						{
+							_.map(myShopCar, (item) => {
+								return (
+									<TableRow>
+										<TableRowColumn style={{width: '40%'}}>
+											<div style={{
+												display: 'flex',
+												flexDirection: 'row',
+												justifyContent: 'flex-start',
+												alignItems: 'center',
+												padding: '10px 0'
+											}}>
+												<Checkbox
+													checkedIcon={<CheckCircle />}
+													uncheckedIcon={<RadioBtnUnchecked color={colors.red50}/>}
+													style={styles.checkbox}
+													onCheck={this._handleChangeItemStatus.bind(this, item.productId)}
+												  checked={!!_.find(this.state.checks, (inlineItem) => {
+												  	return inlineItem === item.productId
+												  })}
 
-									/>
-									<Avatar size={60}  src={require('../../../images/img/user2-160x160.jpg')}/>
-									<span style={{
+												/>
+												<Avatar size={60}  src={item.image}/>
+												<span style={{
 										display: 'block',
 										width: '100%',
 										marginLeft: 10,
 								    overflow: 'hidden',
                     whiteSpace: 'nowrap',
                     textOverflow: 'ellipsis'
-									}}>青霜启动系统</span>
-								</div>
-							</TableRowColumn>
-							<TableRowColumn style={{textAlign: 'center', width: '10%'}}>¥123</TableRowColumn>
-							<TableRowColumn style={{textAlign: 'center', width: '20%'}}>
-								<IconButton>
-									<Add color={colors.grey500}/>
-								</IconButton>
-								<TextField name="count" style={{width: '40%'}} inputStyle={{textAlign: 'center'}}/>
-								<IconButton>
-									<Remove color={colors.grey500}/>
-								</IconButton>
-							</TableRowColumn>
-							<TableRowColumn style={{textAlign: 'center', width: '10%'}}>¥123</TableRowColumn>
-							<TableRowColumn style={{textAlign: 'center', width: '20%'}}>
-								<div>
-									<TextField name="remark" style={{width: '100%', textAlign: 'center'}} hintText="无"/>
-								</div>
-							</TableRowColumn>
-						</TableRow>
+									}}>{item.name}</span>
+											</div>
+										</TableRowColumn>
+										<TableRowColumn style={{textAlign: 'center', width: '10%'}}>¥{item.price}</TableRowColumn>
+										<TableRowColumn style={{textAlign: 'center', width: '20%'}}>
+											<IconButton onTouchTap={() => {
+												this.props.actions.itemAdd(item.productId)
+											}}>
+												<Add color={colors.grey500}/>
+											</IconButton>
+											<TextField name="count" style={{width: '40%'}} value={item.count} onChange={(e) => {
+												this.props.actions.itemSet({
+													id: item.productId,
+													count: _.toInteger(e.target.value)
+												})
+											}} inputStyle={{textAlign: 'center'}}/>
+											<IconButton onTouchTap={() => {
+												this.props.actions.itemDelete(item.productId)
+											}}>
+												<Remove color={colors.grey500}/>
+											</IconButton>
+										</TableRowColumn>
+										<TableRowColumn style={{textAlign: 'center', width: '10%'}}>¥{item.total}</TableRowColumn>
+										<TableRowColumn style={{textAlign: 'center', width: '20%'}}>
+											<div>
+												<TextField name="remark" style={{width: '100%', textAlign: 'center'}} value={item.remark} onChange={(e) => {
+													this.props.actions.productRemark({id: item.productId, remark: e.target.value})
+												}} hintText="无"/>
+														</div>
+													</TableRowColumn>
+												</TableRow>
+											)
+										})
+									}
+
 					</TableBody>
 				</Table>
 
@@ -109,6 +191,11 @@ class ShopCar extends React.Component {
 							checkedIcon={<CheckCircle />}
 							uncheckedIcon={<RadioBtnUnchecked/>}
 							label="全选"
+							onCheck={() => {
+								_.map(myShopCar, (item) => {
+									this._handleChangeItemStatus.bind(this, item.productId)
+								})
+							}}
 						  style={{
 						  	width: 0,
 						  	marginTop: 8
@@ -144,6 +231,24 @@ class ShopCar extends React.Component {
 	}
 }
 
-export default Radium(ShopCar)
 
+function mapStateToProps(state) {
+	/* Populated by react-webpack-redux:reducer */
+	const props = {
+		shopcar: state.shopcar,
+		products: state.product,
+		remarks: state.remarks
+	};
+	return props;
+}
+function mapDispatchToProps(dispatch) {
+	/* Populated by react-webpack-redux:action */
+	return {
+		actions: {...bindActionCreators(actions, dispatch)}
+	}
+}
+
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Radium(ShopCar))
 

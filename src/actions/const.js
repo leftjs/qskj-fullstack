@@ -55,6 +55,8 @@ export const ITEM_ADD = 'ITEM_ADD'
 export const ITEM_DELETE = 'ITEM_DELETE'
 // 设置指定商品数量
 export const ITEM_SET = 'ITEM_SET'
+// 指定商品的备注信息
+export const PRODUCT_REMARK = 'PRODUCT_REMARK'
 
 
 // 用户注册

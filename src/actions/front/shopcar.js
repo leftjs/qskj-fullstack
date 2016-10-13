@@ -27,3 +27,13 @@ export const itemSet = ({id, count}) => {
 		}
 	})
 }
+
+export const productRemark = ({id, remark}) => {
+	return dispatch => dispatch({
+		type: types.PRODUCT_REMARK,
+		payload: {
+			id,
+			remark
+		}
+	})
+}

@@ -53,3 +53,18 @@ export const shopcar = (state = {}, action) => {
 			return state
 	}
 }
+
+export const remarks = (state = {}, action) => {
+	switch (action.type) {
+		case `${types.PRODUCT_REMARK}`:{
+			let {id, remark} = action.payload
+			return {
+				...state,
+				[id]: remark
+			}
+		}
+
+		default:
+			return state
+	}
+}
