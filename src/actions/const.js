@@ -73,3 +73,8 @@ export const LOGOUT_FRONT = 'LOGOUT_FRONT'
 export const ADD_OR_UPDATE_RECEIVE_ADDRESS = 'ADD_OR_UPDATE_RECEIVE_ADDRESS'
 // 删除收获地址
 export const DELETE_RECEIVE_ADDRESS = 'DELETE_RECEIVE_ADDRESS'
+
+
+// 订单
+// 添加订单
+export const ADD_ORDER = 'ADD_ORDER'

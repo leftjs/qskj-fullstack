@@ -4,14 +4,17 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var cors = require('cors')
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
+import products from './routes/products'
+import suppliers from './routes/suppliers'
+import orders from './routes/orders'
+
 var mongoose = require('mongoose')
 import * as cityUtils from './utils/cityUtils'
 require('shelljs/global')
 import config from './config'
-import products from './routes/products'
-import suppliers from './routes/suppliers'
 import fallback from 'express-history-api-fallback'
 
 // 全局变量
@@ -51,6 +54,7 @@ app.use('/api', routes);
 app.use('/api/users', users);
 app.use('/api/products', products)
 app.use('/api/suppliers', suppliers)
+app.use('/api/orders', orders)
 app.get('/deploy', function (req,res,next) {
 	exec('sh ./deploy.sh',function(code, stdout, stderr) {
 		console.log('Exit code:', code);

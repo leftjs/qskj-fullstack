@@ -13,6 +13,7 @@ import Add from 'material-ui/svg-icons/content/add'
 import actions from '../../actions/front'
 import ShopCar from './elements/ShopCar'
 import Alert from 'react-s-alert'
+import _ from 'lodash'
 const styles = {
 	container: {
 		marginTop: 30,
@@ -275,7 +276,7 @@ class Buy extends React.Component {
 		return (
 			<div style={styles.addressContainer}>
 				{
-					!!receiveAddress ? (!this.state.selectedReceiveAddress && receiveAddress.length > 0 && this.setState({selectedReceiveAddress: receiveAddress[0]._id})) || _.map(receiveAddress, (item) => {
+					!!receiveAddress && receiveAddress.length > 0 ? (!this.state.selectedReceiveAddress && receiveAddress.length > 0 && this.setState({selectedReceiveAddress: receiveAddress[0]._id})) || _.map(receiveAddress, (item) => {
 						return (
 							<FlatButton
 								style={this.state.selectedReceiveAddress === item._id ? styles.address : styles.addressNormal}
@@ -290,7 +291,7 @@ class Buy extends React.Component {
 									</div>
 								}/>
 							)
-						}) : <p style={{color: colors.red400}}>请先添加您的收货信息</p>
+						}) : <p style={{color: colors.red400}}>请先添加您的收货信息或者先登录</p>
 					}
 
 			</div>
@@ -429,7 +430,19 @@ class Buy extends React.Component {
 					</div>
 				</Box>
 				<Box title="购物清单" style={[styles.box, {marginTop: 20}]}>
-					<ShopCar/>
+					<ShopCar orderInfo={{
+						address: !!this.state.selectedReceiveAddress && _.find(!!this.props.user && !!this.props.user.info && this.props.user.info.receiveAddress || [], (item) => {
+							return item._id === this.state.selectedReceiveAddress
+						}),
+						invoice: {
+							'发票类型': '纸质发票',
+							'发票抬头': (!!this.props.user.info && (this.props.user.info.username || this.props.user.info.companyName)) || '个人',
+							'发票内容': '购买商品明细',
+							'注册地址': !!this.props.user.info && this.props.user.info.address,
+							'注册电话': (!!this.props.user.info && this.props.user.info.fixedPhone || (!!this.props.user.info && !!this.props.user.info.receiveAddress && !!this.props.user.info.receiveAddress[0] && this.props.user.info.receiveAddress[0].phone)),
+							...this.state.invoices
+						}
+					}}/>
 				</Box>
 			</div>
 		)

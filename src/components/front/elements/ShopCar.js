@@ -14,6 +14,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import actions from '../../../actions/front'
 import _ from 'lodash'
+import Alert from 'react-s-alert'
 
 const styles = {
 	container: {
@@ -34,7 +35,11 @@ class ShopCar extends React.Component {
 		checks: [], // 勾选的商品
 	}
 
-
+	/**
+	 * 购物车中单个项目状态的更新
+	 * @param id
+	 * @private
+	 */
 	_handleChangeItemStatus = (id) => {
 		console.log(id)
 		let add = true
@@ -61,6 +66,18 @@ class ShopCar extends React.Component {
 		}
 	}
 
+	_handleChangeItemStatusAll = (ids) => {
+		if ((this.state.checks || []) && this.state.checks.length === ids.length) {
+			this.setState({
+				checks: []
+			})
+		}else {
+			this.setState({
+				checks: [...ids]
+			})
+		}
+	}
+
 	render() {
 		let {shopcar, products, remarks} = this.props
 		let myShopCar = _.compact(_.map(shopcar, (value, key) => {
@@ -83,7 +100,6 @@ class ShopCar extends React.Component {
 
 			}
 		}))
-
 
 
 		return (
@@ -190,11 +206,13 @@ class ShopCar extends React.Component {
 						<Checkbox
 							checkedIcon={<CheckCircle />}
 							uncheckedIcon={<RadioBtnUnchecked/>}
+							checked={(this.state.checks || []) && this.state.checks.length > 0 && this.state.checks.length === myShopCar.length}
 							label="全选"
 							onCheck={() => {
-								_.map(myShopCar, (item) => {
-									this._handleChangeItemStatus.bind(this, item.productId)
+								let ids = _.map(myShopCar, (item) => {
+									return item.productId
 								})
+								this._handleChangeItemStatusAll(ids)
 							}}
 						  style={{
 						  	width: 0,
@@ -205,7 +223,18 @@ class ShopCar extends React.Component {
 						  }}
 						/>
 						<span style={{marginLeft: 16}}>|</span>
-						<FlatButton label="删除选中的商品" labelStyle={{color: colors.grey500}} />
+						<FlatButton
+							onTouchTap={() => {
+								_.forEach(this.state.checks, (item) => {
+									console.log(item)
+									this.props.actions.itemSet({
+										id: item,
+										count: 0
+									})
+								})
+							}}
+							label="删除选中的商品"
+							labelStyle={{color: colors.grey500}} />
 					</div>
 					<div style={{
 						height: '100%',
@@ -217,10 +246,70 @@ class ShopCar extends React.Component {
 						<div style={{
 							marginRight: 10
 						}}>
-							共<span style={styles.noticeNumber}>2</span>件商品,已选择<span style={styles.noticeNumber}>2</span>件商品,总计(不含运费): <span style={styles.noticeNumber}>¥123</span>
+							共<span style={styles.noticeNumber}>{myShopCar.length}</span>件商品,已选择<span style={styles.noticeNumber}>{this.state.checks.length}</span>件商品,总计(不含运费): <span style={styles.noticeNumber}>{_.sum(_.map(this.state.checks, (id) => {
+								let item = _.find(myShopCar, (inline) => {
+									return inline.productId === id
+								})
+								if (typeof item === 'array') {
+									return item[0] && item[0].total
+								}else {
+									return item && item.total
+								}
+						}))}</span>
 						</div>
 						<RaisedButton label="现在结算" onClick={() => {
-							browserHistory.push('register')
+							if (!this.state.checks || this.state.checks.length === 0) {
+								Alert.error("至少选择一个需要购买的商品")
+								return
+							}
+							let {address, invoice} = this.props.orderInfo
+							if (!address){
+								Alert.error("请先选择或者输入收货地址")
+								return
+							}
+							if (!invoice){
+								Alert.error('请填写发票信息')
+								return
+							}
+							let user = this.props.user
+							if (!!user && !!user.info){
+								this.props.actions.addOrder({
+									items: _.map(this.state.checks, (checked) => {
+										let item = _.find(myShopCar, (inlineItem) => {
+											return inlineItem.productId === checked
+										})
+										return {
+											id: item.productId,
+											count: item.count,
+											remark: item.remark,
+											total: item.total
+										}
+									}),
+									total: _.sum(_.map(this.state.checks, (id) => {
+											let item = _.find(myShopCar, (inline) => {
+												return inline.productId === id
+											})
+											if (typeof item === 'array') {
+												return item[0] && item[0].total
+											}else {
+												return item && item.total
+											}
+									})),
+									token: this.props.user.token || localStorage.getItem('token'),
+									address,
+									invoice
+								}).then((res) => {
+
+									console.log(res)
+								}).catch((err) => {
+									err.res.then((value) => {
+										console.log(value)
+									})
+								})
+							}else {
+								console.log('尚未登录')
+								browserHistory.push('register')
+							}
 						}} backgroundColor={colors.orangeA200} labelColor={colors.white}/>
 					</div>
 
@@ -237,7 +326,8 @@ function mapStateToProps(state) {
 	const props = {
 		shopcar: state.shopcar,
 		products: state.product,
-		remarks: state.remarks
+		remarks: state.remarks,
+		user: state.user
 	};
 	return props;
 }
