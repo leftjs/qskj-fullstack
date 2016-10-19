@@ -14,6 +14,7 @@ import Center from './components/front/Center'
 import DevTools from './stores/DevTools'
 import ShopCar from './components/front/ShopCar'
 import Register from './components/front/Register'
+import Paid from './components/front/Paid'
 const store = configureStore('front')
 const history = syncHistoryWithStore(browserHistory, store)
 import injectTapEventPlugin from 'react-tap-event-plugin'
@@ -62,6 +63,7 @@ ReactDOM.render(
 						<Route path="register" component={Register}/>
 						<Route path="login" component={Login}/>
 						<Route path="center" component={Center}/>
+						<Route path="paid" component={Paid}/>
 					</Route>
 				</Router>
 				{/*{ process.env.NODE_ENV !== 'production' ? <DevTools/> : null}*/}

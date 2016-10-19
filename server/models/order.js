@@ -4,9 +4,9 @@
 var mongoose = require('mongoose')
 var Schema = mongoose.Schema
 const orderSchema = Schema({
-	user: {type: Schema.Types.ObjectId, ref: 'User'}, // 用户id
+	user: String, // 用户id
 	items: [{
-		product: {type: Schema.Types.ObjectId, ref: 'Product'}, // 产品id
+		product: String, // 产品id
 		orderCount: Number, // 订购数量
 		total: Number, // 单项合计
 		remark: String, // 备注
@@ -22,6 +22,10 @@ const orderSchema = Schema({
 	invoice: {
 		type: Object,
 	},
+	orderNo: {
+		type: String,
+		unique: true
+	}, // 订单编号
 	status: {
 		type: String,
 		enum: ["待付款", "已付款", "采购中", "入库检测中", "发货中"]
